@@ -75,3 +75,11 @@ def test_pin_connectivity():
     k2 = next(p for p in circuit.parts if p.ref == "K2")
     assert k2["3"].net.name == "AC_L_IN"
     assert k2["4"].net.name == "AC_VALVE_OUT"
+
+
+def test_wilo_receiver_erc():
+    """Verify that SKiDL Electrical Rules Check reports 0 errors on the receiver circuit."""
+    from circuitron.circuits.wilo_receiver import validate_wilo_receiver_erc
+
+    errors, warnings = validate_wilo_receiver_erc()
+    assert errors == 0, f"Circuit failed Electrical Rules Check with {errors} errors"

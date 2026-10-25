@@ -498,3 +498,18 @@ def create_wilo_receiver_circuit() -> Circuit:
     tb3["3"] += ac_n_in
 
     return c
+
+
+def validate_wilo_receiver_erc() -> tuple[int, int]:
+    """Run SKiDL Electrical Rules Check (ERC) on the receiver circuit.
+
+    Returns:
+        tuple[int, int]: Count of (errors, warnings) reported by ERC.
+    """
+    from skidl import erc_logger
+
+    circuit = create_wilo_receiver_circuit()
+    circuit.ERC()
+    errors = erc_logger.error.count
+    warnings = erc_logger.warning.count
+    return errors, warnings
