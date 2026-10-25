@@ -5,7 +5,7 @@ C_F,1,C,4.7nF,Capacitor_SMD:C_0805_2012Metric,Component C
 "D2, D3",2,1N4007,1N4007,Diode_SMD:D_SMA,Component 1N4007
 J1,1,Conn_02x20_Odd_Even,RPi_Zero_2W_Header,Connector_PinSocket_2.54mm:PinSocket_2x20_P2.54mm_Vertical,Raspberry Pi 40-Pin GPIO Header Receptacle
 J_SMA,1,SMA_Connector,SMA_50_Ohm,Connector_Coaxial:SMA_Amphenol_132134-10_Vertical,Component SMA_Connector
-"K1, K2",2,SRD-05VDC-SL-C,Songle_5V_10A,Relay_THT:Relay_SPDT_Songle_SRD_Series,5V Coil 10A 250VAC Power Relay
+"K1, K2",2,SRD-05VDC-SL-C,Songle_5V_10A,Relay_THT:Relay_SPDT_SANYOU_SRD_Series_Form_C,5V Coil 10A 250VAC Power Relay
 LED_3V3,1,LED,Blue_3V3_LoRa,LED_SMD:LED_0805_2012Metric,Component LED
 LED_5V,1,LED,Green_5V_Power,LED_SMD:LED_0805_2012Metric,Component LED
 LED_PUMP,1,LED,Green_Pump_Active,LED_SMD:LED_0805_2012Metric,Component LED
@@ -14,7 +14,7 @@ LED_PUMP,1,LED,Green_Pump_Active,LED_SMD:LED_0805_2012Metric,Component LED
 "R_PU1, R_PU2",2,R,4.7k,Resistor_SMD:R_0805_2012Metric,Component R
 SW1,1,SW_Push,Force_ON,Button_Switch_THT:SW_PUSH_6mm,Component SW_Push
 SW2,1,SW_Push,Force_OFF,Button_Switch_THT:SW_PUSH_6mm,Component SW_Push
-T1,1,ZMPT101B,ZMPT101B_Transformer,Transformer_THT:Transformer_ZMPT101B,Precision AC Voltage Transformer
+T1,1,ZMPT101B,ZMPT101B_Transformer,Transformer_THT:Transformer_Zeming_ZMPT101K,Precision AC Voltage Transformer
 TB1,1,Screw_Terminal_01x02,5V_DC_IN,"TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal",Component Screw_Terminal_01x02
 TB2,1,Screw_Terminal_01x02,AC_MAINS_IN,"TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal",Component Screw_Terminal_01x02
 TB3,1,Screw_Terminal_01x03,LOAD_ACTUATORS_OUT,"TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-3-5.08_1x03_P5.08mm_Horizontal",Component Screw_Terminal_01x03
@@ -24,4 +24,4 @@ U3,1,ACS712ELCTR-30A-T,ACS712T-30A,Package_SO:SOIC-8_3.9x4.9mm_P1.27mm,Hall-Effe
 U4,1,LM358,LM358_Conditioner,Package_SO:SOIC-8_3.9x4.9mm_P1.27mm,Component LM358
 U5,1,PC817,PC817_Pump,Package_DIP:DIP-4_W7.62mm,Phototransistor Optocoupler
 U6,1,PC817,PC817_Aux,Package_DIP:DIP-4_W7.62mm,Phototransistor Optocoupler
-U_LORA,1,Ra-02_SX1278,SX1278_433MHz,RF_Module:Ra-02,433MHz LoRa Transceiver Module
+U_LORA,1,Ra-02_SX1278,SX1278_433MHz,RF_Module:Ai-Thinker-Ra-01-LoRa,433MHz LoRa Transceiver Module

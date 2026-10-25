@@ -220,7 +220,7 @@ def create_wilo_receiver_circuit() -> Circuit:
         ("15", "ANT", Pin.types.PASSIVE),
         ("16", "GND", Pin.types.PWRIN),
     ]
-    u_lora = _make_part(c, name="Ra-02_SX1278", ref_prefix="U", pins=lora_pins, footprint="RF_Module:Ra-02", value="SX1278_433MHz")
+    u_lora = _make_part(c, name="Ra-02_SX1278", ref_prefix="U", pins=lora_pins, footprint="RF_Module:Ai-Thinker-Ra-01-LoRa", value="SX1278_433MHz")
     u_lora.ref = "U_LORA"
     u_lora["1"] += gnd
     u_lora["2"].do_erc = False
@@ -324,7 +324,7 @@ def create_wilo_receiver_circuit() -> Circuit:
         ("3", "SEC1", Pin.types.PASSIVE),
         ("4", "SEC2", Pin.types.PASSIVE),
     ]
-    t1 = _make_part(c, name="ZMPT101B", ref_prefix="T", pins=zmpt_pins, footprint="Transformer_THT:Transformer_ZMPT101B", value="ZMPT101B_Transformer")
+    t1 = _make_part(c, name="ZMPT101B", ref_prefix="T", pins=zmpt_pins, footprint="Transformer_THT:Transformer_Zeming_ZMPT101K", value="ZMPT101B_Transformer")
     t1.ref = "T1"
 
     # High Voltage Limit Resistors (82k total)
@@ -394,7 +394,7 @@ def create_wilo_receiver_circuit() -> Circuit:
     q1["1"] += u5["3"]
     q1["2"] += gnd
 
-    k1 = _make_part(c, name="SRD-05VDC-SL-C", ref_prefix="K", pins=relay_pins, footprint="Relay_THT:Relay_SPDT_Songle_SRD_Series", value="Songle_5V_10A")
+    k1 = _make_part(c, name="SRD-05VDC-SL-C", ref_prefix="K", pins=relay_pins, footprint="Relay_THT:Relay_SPDT_SANYOU_SRD_Series_Form_C", value="Songle_5V_10A")
     k1.ref = "K1"
     k1["1"] += vcc_5v
     k1["2"] += q1["3"]
@@ -414,7 +414,7 @@ def create_wilo_receiver_circuit() -> Circuit:
     q2["1"] += u6["3"]
     q2["2"] += gnd
 
-    k2 = _make_part(c, name="SRD-05VDC-SL-C", ref_prefix="K", pins=relay_pins, footprint="Relay_THT:Relay_SPDT_Songle_SRD_Series", value="Songle_5V_10A")
+    k2 = _make_part(c, name="SRD-05VDC-SL-C", ref_prefix="K", pins=relay_pins, footprint="Relay_THT:Relay_SPDT_SANYOU_SRD_Series_Form_C", value="Songle_5V_10A")
     k2.ref = "K2"
     k2["1"] += vcc_5v
     k2["2"] += q2["3"]

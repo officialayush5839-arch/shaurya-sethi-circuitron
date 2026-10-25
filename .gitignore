@@ -1,4 +1,9 @@
 circuitron_venv/
+.venv/
+node_modules/
+package-lock.json
+package.json
+generate_lm2596_pcb.py
 .env
 mcp.env
 __pycache__/
@@ -24,3 +29,5 @@ architecture_diagram.mmd
 architecture_diagram.svg
 research-paper/
 task.md
+*.lck
+~*

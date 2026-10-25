@@ -7,9 +7,101 @@ Generates complete KiCad manufacturing artifacts:
 - Bill of Materials CSV (bom.csv)
 """
 import os
+import re
 import csv
 from pathlib import Path
 from circuitron.circuits.wilo_receiver import create_wilo_receiver_circuit
+
+FP_SEARCH_DIRS = [
+    "E:/kicad/share/kicad/footprints",
+    "C:/Program Files/KiCad/share/kicad/footprints",
+    "C:/Program Files/KiCad/8.0/share/kicad/footprints",
+    "/usr/share/kicad/footprints",
+]
+
+
+def _find_kicad_mod_file(fp_identifier: str) -> Path | None:
+    """Find the .kicad_mod file for a given 'Library:Footprint' identifier."""
+    if ":" not in fp_identifier:
+        return None
+    lib, name = fp_identifier.split(":", 1)
+    for base in FP_SEARCH_DIRS:
+        cand = Path(base) / f"{lib}.pretty" / f"{name}.kicad_mod"
+        if cand.exists():
+            return cand
+    return None
+
+
+def _load_and_embed_footprint(
+    fp_identifier: str,
+    ref: str,
+    val: str,
+    px: float,
+    py: float,
+    rot: float,
+    pin_net_map: dict[str, str],
+    net_id_map: dict[str, int],
+) -> str:
+    """Load real .kicad_mod file from disk and embed it with net bindings and placement."""
+    mod_path = _find_kicad_mod_file(fp_identifier)
+    if mod_path and mod_path.exists():
+        mod_text = mod_path.read_text(encoding="utf-8")
+        # 1. Update header with placement coordinates
+        header_pattern = r'\(footprint\s+"[^"]*"'
+        mod_text = re.sub(
+            header_pattern,
+            f'(footprint "{fp_identifier}"\n    (layer "F.Cu")\n    (at {px} {py} {rot})',
+            mod_text,
+            count=1,
+        )
+
+        # 2. Update Reference & Value properties
+        mod_text = re.sub(r'\(property\s+"Reference"\s+"[^"]*"', f'(property "Reference" "{ref}"', mod_text, count=1)
+        mod_text = re.sub(r'\(property\s+"Value"\s+"[^"]*"', f'(property "Value" "{val}"', mod_text, count=1)
+
+        # 3. Attach nets to all (pad ...) s-expressions
+        result_chars = []
+        i = 0
+        n = len(mod_text)
+        while i < n:
+            if mod_text[i : i + 5] == "(pad ":
+                start = i
+                depth = 0
+                while i < n:
+                    if mod_text[i] == "(":
+                        depth += 1
+                    elif mod_text[i] == ")":
+                        depth -= 1
+                        if depth == 0:
+                            i += 1
+                            break
+                    i += 1
+                pad_block = mod_text[start:i]
+                num_m = re.search(r'\(pad\s+"?([^"\s)]+)"?', pad_block)
+                if num_m:
+                    pin_num = num_m.group(1)
+                    net_name = pin_net_map.get(pin_num, "")
+                    net_id = net_id_map.get(net_name, 0)
+                    last_paren = pad_block.rfind(")")
+                    pad_block = pad_block[:last_paren].rstrip() + f' (net {net_id} "{net_name}"))'
+                result_chars.append(pad_block)
+            else:
+                result_chars.append(mod_text[i])
+                i += 1
+
+        return "".join(result_chars)
+
+    # Fallback if library file not on disk
+    lines = [
+        f'  (footprint "{fp_identifier}" (layer "F.Cu") (at {px} {py} {rot})',
+        f'    (property "Reference" "{ref}" (at 0 -2.5 {rot}) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))',
+        f'    (property "Value" "{val}" (at 0 2.5 {rot}) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))',
+    ]
+    for pin_num, net_name in pin_net_map.items():
+        net_id = net_id_map.get(net_name, 0)
+        lines.append(f'    (pad "{pin_num}" thru_hole circle (at 0 0) (size 1.6 1.6) (drill 0.9) (layers "*.Cu" "*.Mask") (net {net_id} "{net_name}"))')
+    lines.append("  )")
+    return "\n".join(lines)
 
 
 def generate_bom_csv(circuit, output_path: Path) -> None:
@@ -27,15 +119,15 @@ def generate_bom_csv(circuit, output_path: Path) -> None:
         for (name, val, fp), refs in sorted(parts_by_value.items(), key=lambda x: x[1][0]):
             refs_str = ", ".join(sorted(refs))
             desc = f"Component {name}"
-            if "SX1278" in name or "Ra-02" in name:
+            if "SX1278" in name or "Ra-0" in name:
                 desc = "433MHz LoRa Transceiver Module"
             elif "ADS1115" in name:
                 desc = "16-Bit 4-Channel I2C ADC"
             elif "ACS712" in name:
                 desc = "Hall-Effect AC Current Sensor IC (30A)"
-            elif "ZMPT101B" in name:
+            elif "ZMPT101" in name:
                 desc = "Precision AC Voltage Transformer"
-            elif "SRD-05VDC" in name:
+            elif "SRD-05VDC" in name or "SANYOU" in fp:
                 desc = "5V Coil 10A 250VAC Power Relay"
             elif "PC817" in name:
                 desc = "Phototransistor Optocoupler"
@@ -48,7 +140,7 @@ def generate_bom_csv(circuit, output_path: Path) -> None:
 
 
 def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
-    """Generate a valid, fully routed dual-zone KiCad PCB file (.kicad_pcb)."""
+    """Generate a valid, fully populated dual-zone KiCad PCB file (.kicad_pcb)."""
     nets = list(circuit.nets)
     net_map: dict[str, int] = {net.name: idx + 1 for idx, net in enumerate(nets)}
     net_map[""] = 0
@@ -111,59 +203,78 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
     ])
 
     # 2. High-Voltage Isolation Creepage Slots (Edge.Cuts slots between DC and AC zones)
-    # Slot 1: Under ACS712 current sensor and optocouplers (x = 100.0, y = 60.0 to 105.0)
-    slot_x = x0 + 50.0
+    slot_x = x0 + 49.0
     lines.extend([
         f'  (gr_rect (start {slot_x - 0.75} {y0 + 10.0}) (end {slot_x + 0.75} {y0 + 55.0}) (stroke (width 0.1) (type default)) (fill solid) (layer "Edge.Cuts"))',
-        f'  (gr_text "ZONE 1: LOW-VOLTAGE DC LOGIC" (at {x0 + 22.0} {y0 + 4.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
-        f'  (gr_text "ZONE 2: 230V AC MAINS HIGH-VOLTAGE" (at {x0 + 66.0} {y0 + 4.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
-        f'  (gr_text "ISOLATION BARRIER (5mm CREEPAGE)" (at {slot_x} {y0 + 58.0} 90) (layer "F.SilkS") (effects (font (size 1.0 1.0) (thickness 0.18))))',
+        f'  (gr_text "ZONE 1: LOW-VOLTAGE DC LOGIC" (at {x0 + 22.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
+        f'  (gr_text "ZONE 2: 230V AC MAINS" (at {x0 + 66.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
+        f'  (gr_text "ISOLATION BARRIER (5mm CREEPAGE)" (at {slot_x - 1.5} {y0 + 32.0} 90) (layer "F.SilkS") (effects (font (size 1.0 1.0) (thickness 0.18))))',
     ])
 
     # 3. Mounting Holes (M2.5 for Raspberry Pi Zero mounting)
     hole_offsets = [(3.5, 3.5), (3.5 + 58.0, 3.5), (3.5, 3.5 + 23.0), (3.5 + 58.0, 3.5 + 23.0)]
     for idx, (hx, hy) in enumerate(hole_offsets):
-        lines.append(f'  (footprint "MountingHole:MountingHole_2.7mm_M2.5" (layer "F.Cu") (at {x0 + hx} {y0 + hy}) (pad "" np_thru_hole circle (at 0 0) (size 2.7 2.7) (drill 2.7) (layers "*.Mask")))')
+        lines.append(
+            f'  (footprint "MountingHole:MountingHole_2.7mm_M2.5" (layer "F.Cu") (at {x0 + hx} {y0 + hy}) '
+            f'(pad "" np_thru_hole circle (at 0 0) (size 2.7 2.7) (drill 2.7) (layers "*.Mask")))'
+        )
 
-    # 4. Component Footprint Placements
-    # Predefined positions for neat dual-zone arrangement
+    # 4. Realistic Dual-Zone Component Positions
     positions = {
-        "J1": (x0 + 32.5, y0 + 15.0, 0),         # 40-Pin Header at top of DC zone
-        "U_LORA": (x0 + 15.0, y0 + 42.0, 0),      # SX1278 module
-        "J_SMA": (x0 + 3.0, y0 + 42.0, 90),       # SMA Edge connector at left border
-        "U1": (x0 + 38.0, y0 + 35.0, 0),          # AMS1117-3.3 regulator
-        "U2": (x0 + 38.0, y0 + 48.0, 0),          # ADS1115 ADC
-        "SW1": (x0 + 10.0, y0 + 57.0, 0),         # Force ON Button
-        "SW2": (x0 + 22.0, y0 + 57.0, 0),         # Force OFF Button
-        "LED_PUMP": (x0 + 30.0, y0 + 57.0, 0),    # Pump LED
-        "LED_5V": (x0 + 37.0, y0 + 57.0, 0),      # 5V LED
-        "LED_3V3": (x0 + 44.0, y0 + 57.0, 0),     # 3.3V LED
-        "TB1": (x0 + 45.0, y0 + 25.0, 90),        # 5V DC Input Terminal
-        "U5": (x0 + 48.0, y0 + 38.0, 0),          # Optocoupler 1
-        "U6": (x0 + 48.0, y0 + 48.0, 0),          # Optocoupler 2
-        "TB2": (x0 + 75.0, y0 + 12.0, 0),         # AC Mains Input Terminal
-        "U3": (x0 + 60.0, y0 + 25.0, 0),          # ACS712 Current Sensor
-        "T1": (x0 + 75.0, y0 + 28.0, 0),          # ZMPT101B Transformer
-        "U4": (x0 + 58.0, y0 + 38.0, 0),          # LM358 Conditioning Op-Amp
-        "K1": (x0 + 65.0, y0 + 50.0, 0),          # Relay 1 (Pump)
-        "K2": (x0 + 78.0, y0 + 50.0, 0),          # Relay 2 (Valve)
-        "TB3": (x0 + 72.0, y0 + 60.0, 0),         # AC Actuators Output Terminal
+        # Zone 1 (DC Logic): x0 + [0 .. 47]
+        "J1": (x0 + 29.0, y0 + 12.0, 90),          # RPi 40-pin header along top of Zone 1
+        "TB1": (x0 + 6.0, y0 + 12.0, 0),           # 5V DC Input Terminal Block
+        "U1": (x0 + 8.0, y0 + 28.0, 0),            # AMS1117-3.3 LDO
+        "C1": (x0 + 4.0, y0 + 36.0, 0),            # 10uF Cap
+        "C2": (x0 + 12.0, y0 + 36.0, 0),           # 22uF Cap
+        "U_LORA": (x0 + 28.0, y0 + 35.0, 0),       # SX1278 16-pin Castellated module
+        "J_SMA": (x0 + 4.0, y0 + 48.0, 90),        # SMA Connector on left edge
+        "U2": (x0 + 38.0, y0 + 35.0, 0),           # ADS1115 ADC
+        "R_PU1": (x0 + 36.0, y0 + 24.0, 0),        # 4.7k Pull-up
+        "R_PU2": (x0 + 40.0, y0 + 24.0, 0),        # 4.7k Pull-up
+        "U5": (x0 + 44.0, y0 + 46.0, 0),           # Optocoupler 1 (Relay 1)
+        "U6": (x0 + 44.0, y0 + 56.0, 0),           # Optocoupler 2 (Relay 2)
+        "Q1": (x0 + 36.0, y0 + 46.0, 0),           # NPN Driver 1
+        "Q2": (x0 + 36.0, y0 + 56.0, 0),           # NPN Driver 2
+        "SW1": (x0 + 10.0, y0 + 58.0, 0),          # Force ON Button
+        "SW2": (x0 + 20.0, y0 + 58.0, 0),          # Force OFF Button
+        "LED_PUMP": (x0 + 28.0, y0 + 58.0, 0),     # Pump Active LED
+        "LED_5V": (x0 + 14.0, y0 + 48.0, 0),       # 5V LED
+        "LED_3V3": (x0 + 22.0, y0 + 48.0, 0),      # 3.3V LED
+
+        # Zone 2 (High-Voltage AC): x0 + [51 .. 85]
+        "TB2": (x0 + 74.0, y0 + 12.0, 0),          # AC Mains Input Terminal
+        "T1": (x0 + 56.0, y0 + 15.0, 0),           # ZMPT101K Voltage Transformer
+        "R_HV1": (x0 + 64.0, y0 + 22.0, 0),        # High-voltage resistor 1
+        "R_HV2": (x0 + 74.0, y0 + 22.0, 0),        # High-voltage resistor 2
+        "U4": (x0 + 56.0, y0 + 26.0, 0),           # LM358 Op-Amp Conditioner
+        "U3": (x0 + 74.0, y0 + 32.0, 0),           # ACS712 Current Sensor
+        "C_F": (x0 + 64.0, y0 + 32.0, 0),          # ACS712 Filter Cap
+        "K1": (x0 + 55.0, y0 + 42.0, 0),           # Relay 1 (Pump)
+        "K2": (x0 + 55.0, y0 + 56.0, 0),           # Relay 2 (Valve)
+        "D2": (x0 + 76.0, y0 + 42.0, 0),           # Flyback Diode 1
+        "D3": (x0 + 76.0, y0 + 56.0, 0),           # Flyback Diode 2
+        "TB3": (x0 + 78.0, y0 + 49.0, 90),         # Actuator Load Output Terminal (Right edge)
     }
 
     for part in circuit.parts:
-        px, py, rot = positions.get(part.ref, (x0 + 20.0, y0 + 30.0, 0))
-        lines.append(f'  (footprint "{part.footprint}" (layer "F.Cu") (at {px} {py} {rot})')
-        lines.append(f'    (property "Reference" "{part.ref}" (at 0 -2.5 {rot}) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))')
-        lines.append(f'    (property "Value" "{getattr(part, "value", part.name)}" (at 0 2.5 {rot}) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))')
+        px, py, rot = positions.get(part.ref, (x0 + 25.0, y0 + 30.0, 0))
+        val = getattr(part, "value", part.name)
+        pin_net_map = {str(pin.num): getattr(pin.net, "name", "") for pin in part.pins}
 
-        # Add footprint pads connected to nets
-        for pin in part.pins:
-            net_id = net_map.get(getattr(pin.net, "name", ""), 0)
-            net_name_val = getattr(pin.net, "name", "")
-            lines.append(f'    (pad "{pin.num}" smd roundrect (at 0 0) (size 1.2 0.8) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25) (net {net_id} "{net_name_val}"))')
-        lines.append('  )')
+        fp_str = _load_and_embed_footprint(
+            part.footprint,
+            part.ref,
+            val,
+            px,
+            py,
+            rot,
+            pin_net_map,
+            net_map,
+        )
+        lines.append(fp_str)
 
-    lines.append(')')
+    lines.append(")")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text("\n".join(lines), encoding="utf-8")
@@ -195,20 +306,22 @@ def generate_kicad_schematic_file(circuit, output_path: Path) -> None:
         lines.append(f'    (property "Footprint" "{part.footprint}" (at {sx} {sy + 12.0} 0) (effects (font (size 1.27 1.27)) hide))')
         lines.append('  )')
 
-    # Add schematic sheet labels for major buses
-    labels = ["+5V", "+3V3_RPI", "+3V3_LORA", "GND", "I2C_SDA", "I2C_SCL", "SPI0_MOSI", "SPI0_MISO", "SPI0_SCLK", "SPI0_CE0", "RELAY1_CTRL", "RELAY2_CTRL", "AC_L_IN", "AC_N_IN", "AC_PUMP_OUT"]
+    labels = [
+        "+5V", "+3V3_RPI", "+3V3_LORA", "GND", "I2C_SDA", "I2C_SCL",
+        "SPI0_MOSI", "SPI0_MISO", "SPI0_SCLK", "SPI0_CE0",
+        "RELAY1_CTRL", "RELAY2_CTRL", "AC_L_IN", "AC_N_IN", "AC_PUMP_OUT",
+    ]
     for idx, lbl in enumerate(labels):
         lx = 20.0 + (idx % 5) * 60.0
         ly = 240.0 + (idx // 5) * 15.0
         lines.append(f'  (global_label "{lbl}" (shape input) (at {lx} {ly} 0) (effects (font (size 1.27 1.27))))')
 
-    lines.append(')')
+    lines.append(")")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     content = "\n".join(lines)
     output_path.write_text(content, encoding="utf-8")
 
-    # Also write .sch compatibility file
     sch_compat = output_path.with_suffix(".sch")
     sch_compat.write_text(content, encoding="utf-8")
 
