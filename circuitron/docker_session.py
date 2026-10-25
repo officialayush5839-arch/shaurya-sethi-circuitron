@@ -56,7 +56,7 @@ def cleanup_stale_containers(prefix: str, exclude: str | None = None) -> None:
     except subprocess.CalledProcessError:  # pragma: no cover - docker failure
         logging.error("Failed to list containers with prefix %s", prefix)
         return
-    except FileNotFoundError:  # pragma: no cover - docker not installed/available
+    except (FileNotFoundError, OSError):  # pragma: no cover - docker not installed/available
         logger.debug("Docker not found; skipping cleanup for prefix %s", prefix)
         return
     for name in proc.stdout.splitlines():
@@ -64,7 +64,7 @@ def cleanup_stale_containers(prefix: str, exclude: str | None = None) -> None:
             continue
         try:
             subprocess.run(["docker", "rm", "-f", name], capture_output=True)
-        except FileNotFoundError:  # pragma: no cover - docker not installed/available
+        except (FileNotFoundError, OSError):  # pragma: no cover - docker not installed/available
             logger.debug("Docker not found during removal; skipping %s", name)
 
 
@@ -554,3 +554,4 @@ export KISYSMOD=/usr/share/kicad/modules
                 else:
                     # Re-raise the error if it's not the tmp error or we've exhausted retries
                     raise
+

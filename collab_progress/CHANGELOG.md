@@ -29,6 +29,15 @@ Entry Template
 - Notes: <optional follow-ups/known issues>
 ```
 
+### [Wilo Receiver PCB]: Complete Design, SKiDL Circuit, KiCad Schematic, Layout & BOM
+- Date: 2026-10-25
+- Time (UTC): 09:10Z
+- Branch/PR: main
+- Files Changed (high level): circuitron/circuits/, scripts/, output/wilo_receiver/, docs/, tests/
+- Details: See collab_progress/wilo-receiver-pcb-implementation-25-10-2026.md
+- Verification: pytest test_wilo_receiver.py & test_artifact_generation.py (4 passed), SKiDL ERC 0 errors, KiCad CLI DRC check
+- Notes: Implements dual-zone high-voltage isolation HAT for Raspberry Pi Zero 2W based on RECEIVER_GUIDE.md
+
 ### Plan: KiCad 9 migration strategies
 - Date: 2026-01-12
 - Time (UTC): 00:00Z
