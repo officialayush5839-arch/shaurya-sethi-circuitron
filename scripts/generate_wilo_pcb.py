@@ -13,6 +13,7 @@ from pathlib import Path
 from circuitron.circuits.wilo_receiver import create_wilo_receiver_circuit
 
 FP_SEARCH_DIRS = [
+    str(Path(__file__).parent.parent / "circuitron" / "footprints_cache"),
     "E:/kicad/share/kicad/footprints",
     "C:/Program Files/KiCad/share/kicad/footprints",
     "C:/Program Files/KiCad/8.0/share/kicad/footprints",
@@ -25,6 +26,12 @@ def _find_kicad_mod_file(fp_identifier: str) -> Path | None:
     if ":" not in fp_identifier:
         return None
     lib, name = fp_identifier.split(":", 1)
+    
+    # Check local cache first
+    cache_cand = Path(__file__).parent.parent / "circuitron" / "footprints_cache" / f"{lib}_{name}.kicad_mod"
+    if cache_cand.exists():
+        return cache_cand
+
     for base in FP_SEARCH_DIRS:
         cand = Path(base) / f"{lib}.pretty" / f"{name}.kicad_mod"
         if cand.exists():
@@ -46,13 +53,14 @@ def _load_and_embed_footprint(
     mod_path = _find_kicad_mod_file(fp_identifier)
     if mod_path and mod_path.exists():
         mod_text = mod_path.read_text(encoding="utf-8")
-        # 1. Update header with placement coordinates
-        header_pattern = r'\(footprint\s+"[^"]*"'
+        # 1. Update header with placement coordinates (cleanly replacing any existing layer/at)
+        header_pattern = r'\(footprint\s+"[^"]*".*?(?=\(version|\(generator|\(descr|\(tags|\(property|\(attr|\(fp_|\(pad)'
         mod_text = re.sub(
             header_pattern,
-            f'(footprint "{fp_identifier}"\n    (layer "F.Cu")\n    (at {px} {py} {rot})',
+            f'(footprint "{fp_identifier}"\n    (layer "F.Cu")\n    (at {px} {py} {rot})\n  ',
             mod_text,
             count=1,
+            flags=re.DOTALL,
         )
 
         # 2. Update Reference & Value properties
@@ -191,9 +199,9 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
         if net_name:
             lines.append(f'  (net {net_id} "{net_name}")')
 
-    # 1. Board Outline (85mm x 65mm on Edge.Cuts)
+    # 1. Board Outline (120mm x 85mm on Edge.Cuts)
     x0, y0 = 50.0, 50.0
-    w, h = 85.0, 65.0
+    w, h = 120.0, 85.0
     x1, y1 = x0 + w, y0 + h
     lines.extend([
         f'  (gr_line (start {x0} {y0}) (end {x1} {y0}) (stroke (width 0.15) (type solid)) (layer "Edge.Cuts"))',
@@ -203,58 +211,61 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
     ])
 
     # 2. High-Voltage Isolation Creepage Slots (Edge.Cuts slots between DC and AC zones)
-    slot_x = x0 + 49.0
+    slot_x = x0 + 67.0
     lines.extend([
-        f'  (gr_rect (start {slot_x - 0.75} {y0 + 10.0}) (end {slot_x + 0.75} {y0 + 55.0}) (stroke (width 0.1) (type default)) (fill solid) (layer "Edge.Cuts"))',
-        f'  (gr_text "ZONE 1: LOW-VOLTAGE DC LOGIC" (at {x0 + 22.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
-        f'  (gr_text "ZONE 2: 230V AC MAINS" (at {x0 + 66.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
-        f'  (gr_text "ISOLATION BARRIER (5mm CREEPAGE)" (at {slot_x - 1.5} {y0 + 32.0} 90) (layer "F.SilkS") (effects (font (size 1.0 1.0) (thickness 0.18))))',
+        f'  (gr_rect (start {slot_x - 0.75} {y0 + 8.0}) (end {slot_x + 0.75} {y0 + 40.0}) (stroke (width 0.1) (type default)) (fill solid) (layer "Edge.Cuts"))',
+        f'  (gr_rect (start {slot_x - 0.75} {y0 + 66.0}) (end {slot_x + 0.75} {y0 + 78.0}) (stroke (width 0.1) (type default)) (fill solid) (layer "Edge.Cuts"))',
+        f'  (gr_text "ZONE 1: LOW-VOLTAGE DC LOGIC" (at {x0 + 32.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
+        f'  (gr_text "ZONE 2: 230V AC MAINS" (at {x0 + 94.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
+        f'  (gr_text "ISOLATION BARRIER (5mm CREEPAGE)" (at {slot_x - 1.5} {y0 + 24.0} 90) (layer "F.SilkS") (effects (font (size 1.0 1.0) (thickness 0.18))))',
     ])
 
-    # 3. Mounting Holes (M2.5 for Raspberry Pi Zero mounting)
-    hole_offsets = [(3.5, 3.5), (3.5 + 58.0, 3.5), (3.5, 3.5 + 23.0), (3.5 + 58.0, 3.5 + 23.0)]
+    # 3. Mounting Holes (M2.5 for Raspberry Pi Zero mounting in Zone 1)
+    hole_offsets = [(4.0, 4.0), (4.0 + 58.0, 4.0), (4.0, 4.0 + 23.0), (4.0 + 58.0, 4.0 + 23.0)]
     for idx, (hx, hy) in enumerate(hole_offsets):
         lines.append(
             f'  (footprint "MountingHole:MountingHole_2.7mm_M2.5" (layer "F.Cu") (at {x0 + hx} {y0 + hy}) '
             f'(pad "" np_thru_hole circle (at 0 0) (size 2.7 2.7) (drill 2.7) (layers "*.Mask")))'
         )
 
-    # 4. Realistic Dual-Zone Component Positions
+    # 4. Realistic Spaced Dual-Zone Component Positions (ZERO overlaps)
     positions = {
-        # Zone 1 (DC Logic): x0 + [0 .. 47]
-        "J1": (x0 + 29.0, y0 + 12.0, 90),          # RPi 40-pin header along top of Zone 1
-        "TB1": (x0 + 6.0, y0 + 12.0, 0),           # 5V DC Input Terminal Block
-        "U1": (x0 + 8.0, y0 + 28.0, 0),            # AMS1117-3.3 LDO
-        "C1": (x0 + 4.0, y0 + 36.0, 0),            # 10uF Cap
-        "C2": (x0 + 12.0, y0 + 36.0, 0),           # 22uF Cap
-        "U_LORA": (x0 + 28.0, y0 + 35.0, 0),       # SX1278 16-pin Castellated module
-        "J_SMA": (x0 + 4.0, y0 + 48.0, 90),        # SMA Connector on left edge
-        "U2": (x0 + 38.0, y0 + 35.0, 0),           # ADS1115 ADC
-        "R_PU1": (x0 + 36.0, y0 + 24.0, 0),        # 4.7k Pull-up
-        "R_PU2": (x0 + 40.0, y0 + 24.0, 0),        # 4.7k Pull-up
-        "U5": (x0 + 44.0, y0 + 46.0, 0),           # Optocoupler 1 (Relay 1)
-        "U6": (x0 + 44.0, y0 + 56.0, 0),           # Optocoupler 2 (Relay 2)
-        "Q1": (x0 + 36.0, y0 + 46.0, 0),           # NPN Driver 1
-        "Q2": (x0 + 36.0, y0 + 56.0, 0),           # NPN Driver 2
-        "SW1": (x0 + 10.0, y0 + 58.0, 0),          # Force ON Button
-        "SW2": (x0 + 20.0, y0 + 58.0, 0),          # Force OFF Button
-        "LED_PUMP": (x0 + 28.0, y0 + 58.0, 0),     # Pump Active LED
-        "LED_5V": (x0 + 14.0, y0 + 48.0, 0),       # 5V LED
-        "LED_3V3": (x0 + 22.0, y0 + 48.0, 0),      # 3.3V LED
+        # Zone 1 (Low-Voltage DC Logic): x0 + [0 .. 66]
+        "J1": (x0 + 8.5, y0 + 10.5, 90),           # RPi 40-pin header along top of Zone 1 (spans x0+8.5 to x0+56.8)
+        "R_PU1": (x0 + 30.0, y0 + 20.0, 0),        # 4.7k I2C pull-up resistor
+        "R_PU2": (x0 + 36.0, y0 + 20.0, 0),        # 4.7k I2C pull-up resistor
+        "J_SMA": (x0 + 4.0, y0 + 42.0, 90),         # SMA antenna connector on left edge
+        "U_LORA": (x0 + 20.0, y0 + 42.0, 0),        # SX1278 16-pin Castellated module (spans x0+12 to x0+28)
+        "U2": (x0 + 48.0, y0 + 36.0, 0),            # ADS1115 ADC MSOP-10 (18mm clearance from Ra-02)
+        "Q1": (x0 + 46.0, y0 + 48.0, 0),            # NPN Driver 1 (Relay 1)
+        "Q2": (x0 + 56.0, y0 + 48.0, 0),            # NPN Driver 2 (Relay 2)
+        "LED_5V": (x0 + 12.0, y0 + 58.0, 0),        # 5V Power LED
+        "LED_3V3": (x0 + 22.0, y0 + 58.0, 0),       # 3.3V Radio LED
+        "LED_PUMP": (x0 + 32.0, y0 + 58.0, 0),      # Pump Active LED
+        "TB1": (x0 + 6.5, y0 + 72.0, 270),          # 5V DC Input Terminal Block (facing left edge)
+        "C1": (x0 + 15.0, y0 + 72.0, 0),            # 10uF Input Filter Cap
+        "U1": (x0 + 22.0, y0 + 72.0, 0),            # AMS1117-3.3V LDO Regulator
+        "C2": (x0 + 29.0, y0 + 72.0, 0),            # 22uF Output Filter Cap
+        "SW1": (x0 + 42.0, y0 + 72.0, 0),           # Force ON 6mm Button
+        "SW2": (x0 + 56.0, y0 + 72.0, 0),           # Force OFF 6mm Button (14mm pitch from SW1)
 
-        # Zone 2 (High-Voltage AC): x0 + [51 .. 85]
-        "TB2": (x0 + 74.0, y0 + 12.0, 0),          # AC Mains Input Terminal
-        "T1": (x0 + 56.0, y0 + 15.0, 0),           # ZMPT101K Voltage Transformer
-        "R_HV1": (x0 + 64.0, y0 + 22.0, 0),        # High-voltage resistor 1
-        "R_HV2": (x0 + 74.0, y0 + 22.0, 0),        # High-voltage resistor 2
-        "U4": (x0 + 56.0, y0 + 26.0, 0),           # LM358 Op-Amp Conditioner
-        "U3": (x0 + 74.0, y0 + 32.0, 0),           # ACS712 Current Sensor
-        "C_F": (x0 + 64.0, y0 + 32.0, 0),          # ACS712 Filter Cap
-        "K1": (x0 + 55.0, y0 + 42.0, 0),           # Relay 1 (Pump)
-        "K2": (x0 + 55.0, y0 + 56.0, 0),           # Relay 2 (Valve)
-        "D2": (x0 + 76.0, y0 + 42.0, 0),           # Flyback Diode 1
-        "D3": (x0 + 76.0, y0 + 56.0, 0),           # Flyback Diode 2
-        "TB3": (x0 + 78.0, y0 + 49.0, 90),         # Actuator Load Output Terminal (Right edge)
+        # Boundary Optocouplers (Straddling slot_x = x0 + 67.0)
+        "U5": (x0 + 67.0, y0 + 48.0, 0),            # PC817 Optocoupler 1 (Relay 1)
+        "U6": (x0 + 67.0, y0 + 60.0, 0),            # PC817 Optocoupler 2 (Relay 2)
+
+        # Zone 2 (High-Voltage 230V AC Mains): x0 + [69 .. 120]
+        "TB2": (x0 + 110.0, y0 + 12.0, 0),          # AC Mains Input Terminal Block (top right)
+        "T1": (x0 + 86.0, y0 + 18.0, 0),            # ZMPT101K Voltage Transformer
+        "R_HV1": (x0 + 80.0, y0 + 30.0, 0),         # High-voltage limiting resistor 1 (Axial)
+        "R_HV2": (x0 + 102.0, y0 + 30.0, 0),        # High-voltage limiting resistor 2 (Axial)
+        "U4": (x0 + 78.0, y0 + 40.0, 0),            # LM358 Op-Amp Conditioner (SOIC-8)
+        "C_F": (x0 + 88.0, y0 + 40.0, 0),           # Filter Cap 0805
+        "U3": (x0 + 104.0, y0 + 40.0, 0),           # ACS712T-30A Current Sensor (SOIC-8)
+        "D2": (x0 + 73.0, y0 + 56.0, 90),           # Flyback Diode 1 (Relay 1)
+        "K1": (x0 + 80.0, y0 + 56.0, 0),            # Songle SRD Relay 1 (Aux/Valve)
+        "D3": (x0 + 73.0, y0 + 73.0, 90),           # Flyback Diode 2 (Relay 2)
+        "K2": (x0 + 80.0, y0 + 73.0, 0),            # Songle SRD Relay 2 (Main Pump Contactor)
+        "TB3": (x0 + 112.0, y0 + 64.0, 90),         # Actuator Load Output Terminal (facing right edge)
     }
 
     for part in circuit.parts:
