@@ -360,11 +360,22 @@ def build_receiver_artifacts(output_dir: str = "output/wilo_receiver") -> dict[s
     bom_path = out_dir / "bom.csv"
     generate_bom_csv(circuit, bom_path)
 
+    # 5. KiCad Project File
+    pro_path = out_dir / "wilo_receiver.kicad_pro"
+    pro_content = (
+        '{\n'
+        '  "meta": {"filename": "wilo_receiver.kicad_pro", "version": 1},\n'
+        '  "sheets": [["wilo_receiver.kicad_sch", ""]]\n'
+        '}\n'
+    )
+    pro_path.write_text(pro_content, encoding="utf-8")
+
     return {
         "netlist": netlist_path,
         "pcb": pcb_path,
         "schematic": sch_path,
         "bom": bom_path,
+        "project": pro_path,
     }
 
 
