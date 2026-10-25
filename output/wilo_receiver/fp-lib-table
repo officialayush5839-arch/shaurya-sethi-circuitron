@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "wilo_receiver")(type "KiCad")(uri "${KIPRJMOD}/wilo_receiver.pretty")(options "")(descr "Project Local Footprints"))
+)
