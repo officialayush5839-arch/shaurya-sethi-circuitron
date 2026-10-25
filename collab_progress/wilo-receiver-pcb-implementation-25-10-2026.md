@@ -34,10 +34,11 @@ The design implements a Raspberry Pi Zero 2W HAT with strict dual-zone isolation
 ## Verification
 - Unit test suite: `& .venv\Scripts\python.exe -m pytest tests/test_wilo_receiver.py tests/test_artifact_generation.py -v` (4 passed).
 - SKiDL Electrical Rules Check (ERC): 0 errors, 0 warnings.
-- KiCad CLI native DRC check: `kicad-cli pcb drc output/wilo_receiver/wilo_receiver.kicad_pcb` passed.
+- Real Footprint & 3D Integration: Loaded full `.kicad_mod` footprint sexpr definitions from KiCad 10 library (`E:/kicad/share/kicad/footprints`) directly into `wilo_receiver.kicad_pcb`.
+- 3D Render Verification: Rendered 3D photorealistic raytraced board views (`output/wilo_receiver/wilo_receiver_3d_iso.png`, `wilo_receiver_3d_top.png`) via `kicad-cli pcb render` confirming all 35 components, pins, pads, silkscreen, and models are physically present and populated.
 
 ## Issues
-- None. All artifacts generated cleanly and validated.
+- Resolved footprint display issue where opening in KiCad showed only mounting holes: earlier generator emitted skeleton pads at (0, 0); resolved by embedding full KiCad 10 official `.kicad_mod` footprints with 3D model paths directly into the PCB S-expression.
 
 ## Next Steps
 - Submit `wilo_receiver.kicad_pcb` to fabricator with 2 oz copper spec.
