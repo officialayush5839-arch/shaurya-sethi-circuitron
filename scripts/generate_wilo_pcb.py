@@ -289,11 +289,11 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
     lines.extend([
         f'  (gr_rect (start {slot_x - 0.75} {y0 + 8.0}) (end {slot_x + 0.75} {y0 + 40.0}) (stroke (width 0.1) (type default)) (fill solid) (layer "Edge.Cuts"))',
         f'  (gr_rect (start {slot_x - 0.75} {y0 + 66.0}) (end {slot_x + 0.75} {y0 + 78.0}) (stroke (width 0.1) (type default)) (fill solid) (layer "Edge.Cuts"))',
-        f'  (gr_text "ZONE 1: LOW-VOLTAGE DC LOGIC (5V USB-C)" (at {x0 + 32.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
-        f'  (gr_text "ZONE 2: 230V AC SENSE & SWITCHING" (at {x0 + 94.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
+        f'  (gr_text "ZONE 1: LOW-VOLTAGE DC LOGIC (5V USB-C)" (at {x0 + 32.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.1 1.1) (thickness 0.18))))',
+        f'  (gr_text "ZONE 2: 230V AC SENSE & SWITCHING" (at {x0 + 94.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.1 1.1) (thickness 0.18))))',
         f'  (gr_text "ISOLATION BARRIER (5mm CREEPAGE)" (at {slot_x - 1.5} {y0 + 24.0} 90) (layer "F.SilkS") (effects (font (size 1.0 1.0) (thickness 0.18))))',
         f'  (gr_text "MAIN POWER: 5V DC USB-C ONLY" (at {x0 + 20.0} {y0 + 82.0}) (layer "F.SilkS") (effects (font (size 1.1 1.1) (thickness 0.2))))',
-        f'  (gr_text "TB2: 230V AC SENSE ONLY" (at {x0 + 104.0} {y0 + 5.0}) (layer "F.SilkS") (effects (font (size 1.0 1.0) (thickness 0.18))))',
+        f'  (gr_text "TB2: 230V AC SENSE ONLY" (at {x0 + 110.0} {y0 + 21.5}) (layer "F.SilkS") (effects (font (size 0.9 0.9) (thickness 0.15))))',
     ])
 
     # 3. Mounting Holes (M2.5 for Raspberry Pi Zero mounting in Zone 1)

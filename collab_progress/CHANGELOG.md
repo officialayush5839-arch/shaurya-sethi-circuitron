@@ -29,6 +29,14 @@ Entry Template
 - Notes: <optional follow-ups/known issues>
 ```
 
+### [Receiver PCB Visual Sync]: 2D Layout Overlap Elimination & 3D Raytrace Alignment
+- Date: 2026-11-02
+- Time (UTC): 13:53Z
+- Branch/PR: main
+- Files Changed (high level): scripts/generate_board_png.py, scripts/generate_wilo_pcb.py, output/wilo_receiver/
+- Details: Resolved visual overlap and label clashes between Zone headers and components (`TB2`, `TB_EXP`, `J_USBC`, `LEDs`). Synchronized exact coordinates between KiCad board generator and 2D rendering script. Exported native vector SVG `wilo_receiver_2d_board.svg`, regenerated high-resolution composite 2D layout `wilo_receiver_board_top.png` and photorealistic 3D renders (`wilo_receiver_3d_iso.png`, `wilo_receiver_3d_top.png`).
+- Verification: `pytest` passed 9/9 unit and integration tests (100%), native KiCad CLI 10.0.7 raytrace and SVG export completed cleanly.
+
 ### [Receiver PCB Fix]: Footprint Coordinate Offset Resolution & Full 3D Model Linking
 - Date: 2026-11-02
 - Time (UTC): 06:48Z
