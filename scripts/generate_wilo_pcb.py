@@ -358,24 +358,54 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
 
         # Zone 2 (High-Voltage 230V AC Mains): x0 + [69 .. 120]
         "TB2": (x0 + 110.0, y0 + 12.0, 0),         # AC Mains Input Terminal Block (top right)
-        "T1": (x0 + 86.0, y0 + 18.0, 0),           # ZMPT101K Voltage Transformer
-        "R_HV1": (x0 + 80.0, y0 + 30.0, 0),        # High-voltage limiting resistor 1 (Axial)
-        "R_HV2": (x0 + 102.0, y0 + 30.0, 0),       # High-voltage limiting resistor 2 (Axial)
+        "T1": (x0 + 75.0, y0 + 14.0, 0),           # ZMPT101K Voltage Transformer (Pads: 75,14; 85,14; 75,26.7; 85,26.7)
+        "R_HV1": (x0 + 98.0, y0 + 22.0, 0),        # High-voltage limiting resistor 1 (Axial, 15.24mm pitch: 98,22 to 113.24,22)
+        "R_HV2": (x0 + 98.0, y0 + 30.0, 0),        # High-voltage limiting resistor 2 (Axial, 15.24mm pitch: 98,30 to 113.24,30)
         "U4": (x0 + 78.0, y0 + 40.0, 0),           # LM358 Op-Amp Conditioner (SOIC-8)
         "C_F": (x0 + 88.0, y0 + 40.0, 0),          # Filter Cap 0805
-        "C_ACS": (x0 + 96.0, y0 + 40.0, 0),        # 0.1uF Decoupling Cap for ACS712
-        "U3": (x0 + 104.0, y0 + 40.0, 0),          # ACS712T-30A Current Sensor (SOIC-8)
-        "D2": (x0 + 73.0, y0 + 56.0, 90),          # Flyback Diode 1 (Relay 1)
+        "C_ACS": (x0 + 98.0, y0 + 40.0, 0),        # 0.1uF Decoupling Cap for ACS712
+        "U3": (x0 + 108.0, y0 + 40.0, 0),          # ACS712T-30A Current Sensor (SOIC-8)
+        "D2": (x0 + 74.0, y0 + 56.0, 90),          # Flyback Diode 1 (Relay 1)
         "K1": (x0 + 80.0, y0 + 56.0, 0),           # Songle SRD Relay 1 (Main Pump Contactor)
-        "MOV1": (x0 + 102.0, y0 + 52.0, 0),        # 14D471K Varistor across Relay 1 contacts
-        "R_SNUB1": (x0 + 96.0, y0 + 46.0, 0),      # 100 ohm 1W Snubber Resistor
-        "C_SNUB1": (x0 + 106.0, y0 + 46.0, 0),     # 0.1uF 630V X2 Film Snubber Cap
-        "D3": (x0 + 73.0, y0 + 73.0, 90),          # Flyback Diode 2 (Relay 2)
+        "MOV1": (x0 + 104.0, y0 + 50.0, 0),        # 14D471K Varistor across Relay 1 contacts
+        "R_SNUB1": (x0 + 101.0, y0 + 58.0, 0),     # 100 ohm 1W Snubber Resistor (pitch 15.24mm: 101,58 to 116.24,58)
+        "C_SNUB1": (x0 + 105.0, y0 + 66.0, 0),     # 0.1uF 630V X2 Film Snubber Cap (pitch 7.5mm: 105,66 to 112.5,66)
+        "D3": (x0 + 74.0, y0 + 73.0, 90),          # Flyback Diode 2 (Relay 2)
         "K2": (x0 + 80.0, y0 + 73.0, 0),           # Songle SRD Relay 2 (Aux Valve)
-        "TB3": (x0 + 112.0, y0 + 64.0, 90),        # Actuator Load Output Terminal (facing right edge)
+        "TB3": (x0 + 112.0, y0 + 73.0, 90),        # Actuator Load Output Terminal (facing right edge)
     }
 
-    # Clear, legible silkscreen labels for every component on the PCB
+    # Clear, legible silkscreen labels for every component on the PCB with explicit zero-overlap coordinates
+    label_positions = {
+        "J1": (x0 + 32.5, y0 + 7.5),
+        "J_USBC": (x0 + 6.0, y0 + 61.5),
+        "U_LORA": (x0 + 20.0, y0 + 32.5),
+        "J_SMA": (x0 + 5.5, y0 + 48.0),
+        "J_CT": (x0 + 12.0, y0 + 26.0),
+        "U2": (x0 + 48.0, y0 + 32.5),
+        "TB_EXP": (x0 + 54.0, y0 + 26.0),
+        "T1": (x0 + 80.0, y0 + 9.5),
+        "TB2": (x0 + 110.0, y0 + 6.0),
+        "R_HV1": (x0 + 105.5, y0 + 19.5),
+        "R_HV2": (x0 + 105.5, y0 + 27.5),
+        "K1": (x0 + 89.5, y0 + 64.5),
+        "K2": (x0 + 89.5, y0 + 81.5),
+        "TB3": (x0 + 112.0, y0 + 63.5),
+        "MOV1": (x0 + 104.0, y0 + 45.0),
+        "R_SNUB1": (x0 + 108.0, y0 + 55.0),
+        "C_SNUB1": (x0 + 108.0, y0 + 63.0),
+        "SW1": (x0 + 42.0, y0 + 74.5),
+        "SW2": (x0 + 56.0, y0 + 74.5),
+        "LED_5V": (x0 + 12.0, y0 + 59.0),
+        "LED_3V3": (x0 + 20.0, y0 + 59.0),
+        "LED_PUMP": (x0 + 36.0, y0 + 59.0),
+        "U5": (x0 + 67.0, y0 + 44.0),
+        "U6": (x0 + 67.0, y0 + 56.0),
+        "U1": (x0 + 25.0, y0 + 63.5),
+        "U3": (x0 + 108.0, y0 + 36.5),
+        "U4": (x0 + 78.0, y0 + 36.5),
+    }
+
     component_labels = {
         "J1": "J1: RPi Zero 2W (40-Pin Header)",
         "J_USBC": "J_USBC: 5V DC IN",
@@ -386,6 +416,8 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
         "TB_EXP": "TB_EXP: A2/A3",
         "T1": "T1: ZMPT101B AC SENSE",
         "TB2": "TB2: 230V AC IN",
+        "R_HV1": "R_HV1: 41.2k 1W",
+        "R_HV2": "R_HV2: 41.2k 1W",
         "K1": "K1: PUMP RELAY 10A",
         "K2": "K2: AUX VALVE 10A",
         "TB3": "TB3: ACTUATORS OUT",
@@ -405,9 +437,9 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
     }
 
     for ref, lbl in component_labels.items():
-        if ref in positions:
-            px, py, _ = positions[ref]
-            lines.append(f'  (gr_text "{lbl}" (at {px} {py + 4.5}) (layer "F.SilkS") (effects (font (size 0.8 0.8) (thickness 0.12))))')
+        if ref in label_positions:
+            lx, ly = label_positions[ref]
+            lines.append(f'  (gr_text "{lbl}" (at {lx} {ly}) (layer "F.SilkS") (effects (font (size 0.8 0.8) (thickness 0.12))))')
 
     for part in circuit.parts:
         px, py, rot = positions.get(part.ref, (x0 + 25.0, y0 + 30.0, 0))

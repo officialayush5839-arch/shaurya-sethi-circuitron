@@ -220,65 +220,99 @@ def render_board_png(output_png: Path) -> None:
     # ZONE 2: 230V AC MAINS & POWER SWITCHING
     # =========================================================================
 
-    # 8. TB2: 230V AC Mains In (Placed at x0 + 110.0, y0 + 14.0)
-    # Silkscreen text is strictly placed BELOW at y0 + 21.5 to guarantee ZERO overlap with Zone 2 Header
-    tb2_x, tb2_y = x0 + 110.0, y0 + 14.0
+    # 8. TB2: 230V AC Mains In (Top Right: x0 + 110.0, y0 + 12.0)
+    tb2_x, tb2_y = x0 + 110.0, y0 + 12.0
     ax.add_patch(patches.Rectangle((tb2_x - 5.5, tb2_y - 4.5), 11.0, 9.0, facecolor="#7F1D1D", edgecolor="#EF4444", linewidth=1.5, zorder=4))
     for dx in [-2.54, 2.54]:
         ax.add_patch(plt.Circle((tb2_x + dx, tb2_y), 1.8, facecolor="#E2E8F0", edgecolor="#94A3B8", linewidth=1.0, zorder=5))
         ax.add_patch(patches.Rectangle((tb2_x + dx - 1.2, tb2_y - 0.25), 2.4, 0.5, facecolor="#334155", zorder=6))
     ax.text(tb2_x - 2.54, tb2_y - 6.0, "L", color="#F87171", fontsize=8.5, fontweight='bold', ha='center', va='center', zorder=7)
     ax.text(tb2_x + 2.54, tb2_y - 6.0, "N", color="#60A5FA", fontsize=8.5, fontweight='bold', ha='center', va='center', zorder=7)
-    ax.text(tb2_x, tb2_y + 7.5, "TB2: 230V AC SENSE ONLY\n(ZMPT101B SENSE ONLY)", color="#FCA5A5", fontsize=7.2, fontweight='bold', ha='center', va='center', zorder=7)
+    ax.text(tb2_x, tb2_y + 6.5, "TB2: 230V AC IN", color="#FCA5A5", fontsize=7.2, fontweight='bold', ha='center', va='center', zorder=7)
 
-    # 9. T1: ZMPT101B Voltage Transformer & High Voltage Resistors
-    t1_x, t1_y = x0 + 86.0, y0 + 18.0
-    ax.add_patch(patches.Rectangle((t1_x - 9.0, t1_y - 9.0), 18.0, 18.0, facecolor="#0B132B", edgecolor="#3A506B", linewidth=2.0, zorder=4))
-    ax.add_patch(plt.Circle((t1_x, t1_y), 6.5, facecolor="#1C2541", edgecolor="#5BC0BE", linewidth=1.2, zorder=5))
-    ax.add_patch(plt.Circle((t1_x, t1_y), 3.0, facecolor="#0B132B", edgecolor="#3A506B", linewidth=1.0, zorder=6))
-    ax.text(t1_x, t1_y - 1.0, "T1:\nZMPT101B", color="#F8FAFC", fontsize=7.5, fontweight='bold', ha='center', va='center', zorder=7)
-    ax.text(t1_x, t1_y - 11.2, "Voltage Sensor", color="#94A3B8", fontsize=7.5, ha='center', va='center', zorder=7)
+    # 9. T1: ZMPT101B Voltage Transformer (x0 + 75.0, y0 + 14.0)
+    # Clear 19x19mm body with all 4 pads totally isolated
+    t1_x, t1_y = x0 + 75.0, y0 + 14.0
+    ax.add_patch(patches.Rectangle((t1_x - 4.5, t1_y - 4.5), 19.0, 19.6, facecolor="#0B132B", edgecolor="#3A506B", linewidth=2.0, zorder=4))
+    ax.add_patch(plt.Circle((t1_x + 5.0, t1_y + 6.35), 6.5, facecolor="#1C2541", edgecolor="#5BC0BE", linewidth=1.2, zorder=5))
+    ax.add_patch(plt.Circle((t1_x + 5.0, t1_y + 6.35), 3.0, facecolor="#0B132B", edgecolor="#3A506B", linewidth=1.0, zorder=6))
+    ax.text(t1_x + 5.0, t1_y + 6.35, "T1:\nZMPT101B", color="#F8FAFC", fontsize=7.2, fontweight='bold', ha='center', va='center', zorder=7)
+    ax.text(t1_x + 5.0, t1_y - 6.0, "Voltage Sensor", color="#94A3B8", fontsize=7.2, ha='center', va='center', zorder=7)
+    # T1 Through-Hole Pads
+    for tpx, tpy in [(t1_x, t1_y), (t1_x, t1_y + 12.7), (t1_x + 10.0, t1_y + 12.7), (t1_x + 10.0, t1_y)]:
+        ax.add_patch(plt.Circle((tpx, tpy), 1.5, facecolor="#E2E8F0", edgecolor="#F59E0B", linewidth=0.8, zorder=6))
+        ax.add_patch(plt.Circle((tpx, tpy), 0.7, facecolor="#0B0F19", zorder=7))
 
-    # High Voltage Resistors (R_HV1, R_HV2)
-    for rhv_ref, rhv_x in [("R_HV1", x0 + 80.0), ("R_HV2", x0 + 102.0)]:
-        ax.add_patch(patches.Rectangle((rhv_x - 7.5, y0 + 30.0 - 1.8), 15.0, 3.6, facecolor="#92400E", edgecolor="#D97706", linewidth=1.0, zorder=4))
-        ax.text(rhv_x, y0 + 30.0, f"{rhv_ref}: 41.2k 1W", color="#FEF08A", fontsize=6.8, fontweight='bold', ha='center', va='center', zorder=5)
+    # High Voltage Limiting Resistors R_HV1 and R_HV2 (Separated to the right of T1, ZERO overlap)
+    # Pitch: 15.24mm horizontal, 8mm vertical row pitch
+    for rhv_ref, rhv_y in [("R_HV1", y0 + 22.0), ("R_HV2", y0 + 30.0)]:
+        rx = x0 + 98.0
+        # Axial resistor body centered at rx + 7.62
+        ax.add_patch(patches.Rectangle((rx + 7.62 - 5.0, rhv_y - 1.8), 10.0, 3.6, facecolor="#92400E", edgecolor="#D97706", linewidth=1.0, zorder=4))
+        # Leads connecting to pads
+        ax.plot([rx, rx + 7.62 - 5.0], [rhv_y, rhv_y], color="#D97706", linewidth=1.2, zorder=4)
+        ax.plot([rx + 7.62 + 5.0, rx + 15.24], [rhv_y, rhv_y], color="#D97706", linewidth=1.2, zorder=4)
+        # Dedicated Through-Hole Pads (Pad 1 & Pad 2)
+        for px in [rx, rx + 15.24]:
+            ax.add_patch(plt.Circle((px, rhv_y), 1.5, facecolor="#E2E8F0", edgecolor="#F59E0B", linewidth=0.8, zorder=5))
+            ax.add_patch(plt.Circle((px, rhv_y), 0.7, facecolor="#0B0F19", zorder=6))
+        ax.text(rx + 7.62, rhv_y, f"{rhv_ref}: 41.2k 1W", color="#FEF08A", fontsize=6.5, fontweight='bold', ha='center', va='center', zorder=7)
 
-    # 10. U4: LM358 Conditioner & U3: ACS712T-30A Current Sensor
+    # 10. Sensor Signal Conditioner Row (y0 + 40.0)
+    # U4 (LM358)
     u4_x, u4_y = x0 + 78.0, y0 + 40.0
     ax.add_patch(patches.Rectangle((u4_x - 2.5, u4_y - 2.5), 5.0, 5.0, facecolor="#0F172A", edgecolor="#64748B", linewidth=1.0, zorder=4))
     ax.text(u4_x, u4_y, "LM358", color="#E2E8F0", fontsize=6.5, fontweight='bold', ha='center', va='center', zorder=5)
-    ax.text(u4_x, u4_y - 4.2, "U4: AC Filter", color="#94A3B8", fontsize=7.5, ha='center', va='center', zorder=6)
+    ax.text(u4_x, u4_y - 4.2, "U4: AC Filter", color="#94A3B8", fontsize=7.2, ha='center', va='center', zorder=6)
 
-    # ACS712T-30A Current Sensor (U3) + C_ACS decoupling
-    u3_x, u3_y = x0 + 104.0, y0 + 40.0
+    # C_F (Filter Cap 0805)
+    ax.add_patch(patches.Rectangle((x0 + 88.0 - 0.8, y0 + 40.0 - 0.5), 1.6, 1.0, facecolor="#B45309", edgecolor="#F59E0B", linewidth=0.6, zorder=4))
+    ax.text(x0 + 88.0, y0 + 42.0, "C_F\n4.7nF", color="#FDE047", fontsize=5.2, ha='center', va='center', zorder=5)
+
+    # C_ACS (Decoupling Cap 0805)
+    ax.add_patch(patches.Rectangle((x0 + 98.0 - 0.8, y0 + 40.0 - 0.5), 1.6, 1.0, facecolor="#B45309", edgecolor="#F59E0B", linewidth=0.6, zorder=4))
+    ax.text(x0 + 98.0, y0 + 42.0, "C_ACS\n0.1uF", color="#FDE047", fontsize=5.2, ha='center', va='center', zorder=5)
+
+    # U3 (ACS712T-30A Current Sensor)
+    u3_x, u3_y = x0 + 108.0, y0 + 40.0
     ax.add_patch(patches.Rectangle((u3_x - 3.0, u3_y - 2.5), 6.0, 5.0, facecolor="#0F172A", edgecolor="#EF4444", linewidth=1.5, zorder=4))
     ax.text(u3_x, u3_y, "ACS712\n30A", color="#FDE047", fontsize=6.5, fontweight='bold', ha='center', va='center', zorder=5)
-    ax.text(u3_x, u3_y - 4.5, "U3: Current Sensor", color="#F87171", fontsize=7.5, fontweight='bold', ha='center', va='center', zorder=6)
+    ax.text(u3_x, u3_y - 4.5, "U3: Current Sensor", color="#F87171", fontsize=7.2, fontweight='bold', ha='center', va='center', zorder=6)
 
-    ax.add_patch(patches.Rectangle((x0 + 96.0 - 0.8, y0 + 40.0 - 0.5), 1.6, 1.0, facecolor="#B45309", edgecolor="#F59E0B", linewidth=0.6, zorder=4))
-    ax.text(x0 + 96.0, y0 + 42.0, "C_ACS\n0.1uF", color="#FDE047", fontsize=5.2, ha='center', va='center', zorder=5)
-
-    # 11. Relays K1 & K2, MOV1, Snubber (R_SNUB1 + C_SNUB1)
-    # Relay K1 (Primary Pump)
+    # 11. Relays K1 & K2, MOV1, Dedicated Snubber (R_SNUB1 + C_SNUB1)
+    # Relay K1 (Primary Pump Contactor)
     k1_x, k1_y = x0 + 80.0, y0 + 56.0
     ax.add_patch(patches.Rectangle((k1_x, k1_y - 7.75), 19.0, 15.5, facecolor="#1D4ED8", edgecolor="#2563EB", linewidth=1.8, zorder=4))
     ax.text(k1_x + 9.5, k1_y - 1.5, "SONGLE RELAY\n10A 250VAC", color="#FFFFFF", fontsize=7.5, fontweight='bold', ha='center', va='center', zorder=5)
     ax.text(k1_x + 9.5, k1_y + 4.5, "K1: WILO PUMP", color="#BFDBFE", fontsize=7.5, fontweight='bold', ha='center', va='center', zorder=5)
 
-    # MOV1 Varistor (14D471K)
-    mov_x, mov_y = x0 + 102.0, y0 + 52.0
-    ax.add_patch(plt.Circle((mov_x, mov_y), 4.5, facecolor="#0284C7", edgecolor="#0369A1", linewidth=1.2, zorder=5))
-    ax.text(mov_x, mov_y, "MOV1\n14D471K", color="#FFFFFF", fontsize=5.8, fontweight='bold', ha='center', va='center', zorder=6)
+    # MOV1 Varistor (14D471K: x0 + 104.0, y0 + 50.0)
+    mov_x, mov_y = x0 + 104.0, y0 + 50.0
+    ax.add_patch(plt.Circle((mov_x + 3.75, mov_y), 5.5, facecolor="#0284C7", edgecolor="#0369A1", linewidth=1.2, zorder=5))
+    for mpx in [mov_x, mov_x + 7.5]:
+        ax.add_patch(plt.Circle((mpx, mov_y), 1.4, facecolor="#E2E8F0", edgecolor="#0284C7", linewidth=0.8, zorder=6))
+        ax.add_patch(plt.Circle((mpx, mov_y), 0.6, facecolor="#0B0F19", zorder=7))
+    ax.text(mov_x + 3.75, mov_y, "MOV1\n14D471K", color="#FFFFFF", fontsize=5.8, fontweight='bold', ha='center', va='center', zorder=8)
 
-    # RC Snubber (R_SNUB1 + C_SNUB1)
-    ax.add_patch(patches.Rectangle((x0 + 95.0 - 4.5, y0 + 46.0 - 1.5), 9.0, 3.0, facecolor="#92400E", edgecolor="#D97706", linewidth=0.8, zorder=4))
-    ax.text(x0 + 95.0, y0 + 46.0, "R_SNUB\n100Ω 1W", color="#FEF08A", fontsize=5.2, fontweight='bold', ha='center', va='center', zorder=5)
+    # RC Snubber Resistor R_SNUB1 (x0 + 101.0, y0 + 58.0: 15.24mm pitch, isolated level)
+    rsnub_x, rsnub_y = x0 + 101.0, y0 + 58.0
+    ax.add_patch(patches.Rectangle((rsnub_x + 7.62 - 5.0, rsnub_y - 1.5), 10.0, 3.0, facecolor="#92400E", edgecolor="#D97706", linewidth=0.8, zorder=4))
+    ax.plot([rsnub_x, rsnub_x + 7.62 - 5.0], [rsnub_y, rsnub_y], color="#D97706", linewidth=1.0, zorder=4)
+    ax.plot([rsnub_x + 7.62 + 5.0, rsnub_x + 15.24], [rsnub_y, rsnub_y], color="#D97706", linewidth=1.0, zorder=4)
+    for px in [rsnub_x, rsnub_x + 15.24]:
+        ax.add_patch(plt.Circle((px, rsnub_y), 1.4, facecolor="#E2E8F0", edgecolor="#F59E0B", linewidth=0.8, zorder=5))
+        ax.add_patch(plt.Circle((px, rsnub_y), 0.6, facecolor="#0B0F19", zorder=6))
+    ax.text(rsnub_x + 7.62, rsnub_y, "R_SNUB: 100Ω 1W", color="#FEF08A", fontsize=5.5, fontweight='bold', ha='center', va='center', zorder=7)
 
-    ax.add_patch(patches.Rectangle((x0 + 105.0 - 4.0, y0 + 46.0 - 2.0), 8.0, 4.0, facecolor="#B91C1C", edgecolor="#DC2626", linewidth=1.0, zorder=4))
-    ax.text(x0 + 105.0, y0 + 46.0, "C_SNUB\n0.1uF X2", color="#FFFFFF", fontsize=5.2, fontweight='bold', ha='center', va='center', zorder=5)
+    # RC Snubber Capacitor C_SNUB1 (x0 + 105.0, y0 + 66.0: 7.5mm pitch, isolated level)
+    csnub_x, csnub_y = x0 + 105.0, y0 + 66.0
+    ax.add_patch(patches.Rectangle((csnub_x - 1.25, csnub_y - 2.0), 10.0, 4.0, facecolor="#B91C1C", edgecolor="#DC2626", linewidth=1.0, zorder=4))
+    for px in [csnub_x, csnub_x + 7.5]:
+        ax.add_patch(plt.Circle((px, csnub_y), 1.4, facecolor="#E2E8F0", edgecolor="#DC2626", linewidth=0.8, zorder=5))
+        ax.add_patch(plt.Circle((px, csnub_y), 0.6, facecolor="#0B0F19", zorder=6))
+    ax.text(csnub_x + 3.75, csnub_y, "C_SNUB\n0.1uF X2", color="#FFFFFF", fontsize=5.5, fontweight='bold', ha='center', va='center', zorder=7)
 
-    # Relay K2 (Aux / Valve)
+    # Relay K2 (Aux / Valve: x0 + 80.0, y0 + 73.0)
     k2_x, k2_y = x0 + 80.0, y0 + 73.0
     ax.add_patch(patches.Rectangle((k2_x, k2_y - 7.75), 19.0, 15.5, facecolor="#1D4ED8", edgecolor="#2563EB", linewidth=1.8, zorder=4))
     ax.text(k2_x + 9.5, k2_y - 1.5, "SONGLE RELAY\n10A 250VAC", color="#FFFFFF", fontsize=7.5, fontweight='bold', ha='center', va='center', zorder=5)
@@ -286,11 +320,11 @@ def render_board_png(output_png: Path) -> None:
 
     # Flyback Diodes D2, D3
     for d_ref, dy in [("D2", k1_y), ("D3", k2_y)]:
-        ax.add_patch(patches.Rectangle((k1_x - 7.0, dy - 1.2), 4.5, 2.4, facecolor="#0F172A", edgecolor="#94A3B8", linewidth=0.8, zorder=4))
-        ax.text(k1_x - 4.75, dy + 2.5, f"{d_ref}\n1N4007", color="#CBD5E1", fontsize=5.5, ha='center', va='center', zorder=5)
+        ax.add_patch(patches.Rectangle((k1_x - 6.0 - 1.2, dy - 2.25), 2.4, 4.5, facecolor="#0F172A", edgecolor="#94A3B8", linewidth=0.8, zorder=4))
+        ax.text(k1_x - 6.0, dy - 3.2, f"{d_ref}\n1N4007", color="#CBD5E1", fontsize=5.5, ha='center', va='center', zorder=5)
 
-    # 12. TB3: 3-Pin Actuator Output Screw Terminal (Far Right)
-    tb3_x, tb3_y = x0 + 112.0, y0 + 64.0
+    # 12. TB3: 3-Pin Actuator Output Screw Terminal (Far Right: x0 + 112.0, y0 + 73.0)
+    tb3_x, tb3_y = x0 + 112.0, y0 + 73.0
     ax.add_patch(patches.Rectangle((tb3_x - 4.5, tb3_y - 8.0), 9.0, 16.0, facecolor="#166534", edgecolor="#22C55E", linewidth=1.5, zorder=4))
     for dy, lbl in [(-5.08, "PUMP"), (0, "VALVE"), (5.08, "NEUT")]:
         ax.add_patch(plt.Circle((tb3_x, tb3_y + dy), 1.8, facecolor="#E2E8F0", edgecolor="#94A3B8", linewidth=1.0, zorder=5))

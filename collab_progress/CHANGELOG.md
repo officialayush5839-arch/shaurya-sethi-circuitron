@@ -29,6 +29,14 @@ Entry Template
 - Notes: <optional follow-ups/known issues>
 ```
 
+### [Receiver PCB Pad Deconfliction]: R_HV Resistors and Snubber Pad Separation
+- Date: 2026-11-02
+- Time (UTC): 14:26Z
+- Branch/PR: main
+- Files Changed (high level): scripts/generate_wilo_pcb.py, scripts/generate_board_png.py, output/wilo_receiver/
+- Details: Resolved through-hole pad collision where high-voltage resistors R_HV1 and R_HV2 overlapped transformer T1 (ZMPT101B) secondary pins and body, causing double/figure-8 drill holes. Relocated T1 to (x0 + 75.0, y0 + 14.0) and positioned R_HV1 and R_HV2 at (x0 + 98.0, y0 + 22.0) and (x0 + 98.0, y0 + 30.0) with guaranteed 8.5-13mm clearances. Staggered MOV1, R_SNUB1, and C_SNUB1 into dedicated vertical rows (y0 + 50, 58, 66). Updated 2D/3D KiCad renders and refreshed Desktop zip package `wilo_receiver_kicad_pcb.zip`.
+- Verification: `pytest` passed 9/9 unit and integration tests (100%), verified single isolated through-hole pads for all axial resistors and transformers in KiCad PCB.
+
 ### [Receiver PCB Visual Sync]: 2D Layout Overlap Elimination & 3D Raytrace Alignment
 - Date: 2026-11-02
 - Time (UTC): 13:53Z
