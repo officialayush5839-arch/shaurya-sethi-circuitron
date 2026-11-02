@@ -16,6 +16,13 @@ from circuitron.circuits.wilo_receiver import create_wilo_receiver_circuit
 _KICAD_FOOTPRINTS = Path("E:/kicad/share/kicad/footprints")
 _LOCAL_FOOTPRINT_CACHE = Path("circuitron/footprints_cache")
 
+_3D_SUBS = {
+    "USB_C_Receptacle_HRO_TYPE-C-31-M-12.step": "USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal.step",
+    "Jack_3.5mm_CUI_SJ1-3513N_Horizontal.step": "Jack_3.5mm_CUI_SJ1-3523N_Horizontal.step",
+    "Transformer_Zeming_ZMPT101K.step": "Transformer_Breve_TEZ-22x24.step",
+    "Ai-Thinker-Ra-01-LoRa.step": "ESP-12E.step",
+}
+
 
 def _find_footprint_file(fp_identifier: str) -> Path | None:
     """Find a footprint (.kicad_mod) file either from local cache or KiCad system libraries."""
@@ -64,49 +71,61 @@ def _load_and_embed_footprint(
     if fp_file and fp_file.exists():
         mod_text = fp_file.read_text(encoding="utf-8", errors="replace")
 
-        # Update root header with position & rotation
-        mod_text = re.sub(
-            r'^\s*\((?:footprint|module)\s+"?[^"\s\)]+"?',
-            f'  (footprint "{fp_identifier}" (layer "F.Cu") (at {px} {py} {rot})',
-            mod_text,
-            count=1,
-            flags=re.MULTILINE,
-        )
+        # 1. Substitute missing 3D models with geometry matches
+        for orig, sub in _3D_SUBS.items():
+            mod_text = mod_text.replace(orig, sub)
 
-        # Update Reference property
-        mod_text = re.sub(
+        # 2. Re-point model paths to explicit drive path and KICAD10_3DMODEL_DIR
+        mod_text = mod_text.replace("${KICAD10_3DMODEL_DIR}", "E:/kicad/share/kicad/3dmodels")
+        mod_text = mod_text.replace("${KICAD_3DMODEL_DIR}", "E:/kicad/share/kicad/3dmodels")
+        mod_text = mod_text.replace("${KICAD6_3DMODEL_DIR}", "E:/kicad/share/kicad/3dmodels")
+        mod_text = mod_text.replace("${KICAD8_3DMODEL_DIR}", "E:/kicad/share/kicad/3dmodels")
+
+        # 3. Strip header and any initial (layer ...) / (at 0 0)
+        lines = mod_text.strip().splitlines()
+        body_lines = []
+        skip_header = True
+        for line in lines[1:]:
+            s = line.strip()
+            if skip_header:
+                if s.startswith('(layer ') or s.startswith('(at 0 0') or s.startswith('(at 0 0 0)'):
+                    continue
+                skip_header = False
+            body_lines.append(line)
+        cleaned_body = "\n".join(body_lines)
+
+        # 4. Inject Reference and Value properties
+        cleaned_body = re.sub(
             r'\(property\s+"Reference"\s+"[^"]*"\s*(\(at[^)]*\))?',
-            f'(property "Reference" "{ref}" (at 0 -2.5 {rot}) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15)))',
-            mod_text,
+            f'(property "Reference" "{ref}" (at 0 -2.5 {rot}) (layer "F.SilkS") (effects (font (size 0.9 0.9) (thickness 0.15)))',
+            cleaned_body,
             count=1,
         )
-
-        # Update Value property
-        mod_text = re.sub(
+        cleaned_body = re.sub(
             r'\(property\s+"Value"\s+"[^"]*"\s*(\(at[^)]*\))?',
-            f'(property "Value" "{val}" (at 0 2.5 {rot}) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15)))',
-            mod_text,
+            f'(property "Value" "{val}" (at 0 2.5 {rot}) (layer "F.SilkS") (effects (font (size 0.8 0.8) (thickness 0.12)))',
+            cleaned_body,
             count=1,
         )
 
-        # Inject nets into pad definitions
+        # 5. Inject pad net connections
         result_chars = []
         i = 0
-        n = len(mod_text)
+        n = len(cleaned_body)
         while i < n:
-            if mod_text[i : i + 5] == "(pad ":
+            if cleaned_body[i : i + 5] == "(pad ":
                 start = i
                 depth = 0
                 while i < n:
-                    if mod_text[i] == "(":
+                    if cleaned_body[i] == "(":
                         depth += 1
-                    elif mod_text[i] == ")":
+                    elif cleaned_body[i] == ")":
                         depth -= 1
                         if depth == 0:
                             i += 1
                             break
                     i += 1
-                pad_block = mod_text[start:i]
+                pad_block = cleaned_body[start:i]
                 num_m = re.search(r'\(pad\s+"?([^"\s)]+)"?', pad_block)
                 if num_m:
                     pin_num = num_m.group(1)
@@ -116,16 +135,17 @@ def _load_and_embed_footprint(
                     pad_block = pad_block[:last_paren].rstrip() + f' (net {net_id} "{net_name}"))'
                 result_chars.append(pad_block)
             else:
-                result_chars.append(mod_text[i])
+                result_chars.append(cleaned_body[i])
                 i += 1
 
-        return "".join(result_chars)
+        final_body = "".join(result_chars)
+        return f'  (footprint "{fp_identifier}" (layer "F.Cu") (at {px} {py} {rot})\n{final_body}'
 
     # Fallback if library file not on disk
     lines = [
         f'  (footprint "{fp_identifier}" (layer "F.Cu") (at {px} {py} {rot})',
         f'    (property "Reference" "{ref}" (at 0 -2.5 {rot}) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))',
-        f'    (property "Value" "{val}" (at 0 2.5 {rot}) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))',
+        f'    (property "Value" "{val}" (at 0 2.5 {rot}) (layer "F.SilkS") (effects (font (size 0.8 0.8) (thickness 0.12))))',
     ]
     for pin_num, net_name in pin_net_map.items():
         net_id = net_id_map.get(net_name, 0)
@@ -287,7 +307,7 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
     # 4. Realistic Spaced Dual-Zone Component Positions (ZERO overlaps)
     positions = {
         # Zone 1 (Low-Voltage DC Logic): x0 + [0 .. 66]
-        "J1": (x0 + 8.5, y0 + 10.5, 90),           # RPi 40-pin header along top of Zone 1 (spans x0+8.5 to x0+56.8)
+        "J1": (x0 + 32.5, y0 + 12.0, 0),            # RPi 40-pin header horizontal (spans x0+8 to x0+57, y0+12)
         "R_PU1": (x0 + 30.0, y0 + 19.0, 0),        # 4.7k I2C pull-up resistor
         "R_PU2": (x0 + 36.0, y0 + 19.0, 0),        # 4.7k I2C pull-up resistor
         "TB_EXP": (x0 + 54.0, y0 + 19.0, 0),       # ADC A2/A3 Expansion Screw Terminal Block
@@ -354,6 +374,40 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
         "K2": (x0 + 80.0, y0 + 73.0, 0),           # Songle SRD Relay 2 (Aux Valve)
         "TB3": (x0 + 112.0, y0 + 64.0, 90),        # Actuator Load Output Terminal (facing right edge)
     }
+
+    # Clear, legible silkscreen labels for every component on the PCB
+    component_labels = {
+        "J1": "J1: RPi Zero 2W (40-Pin Header)",
+        "J_USBC": "J_USBC: 5V DC IN",
+        "U_LORA": "U_LORA: Ra-02 433MHz",
+        "J_SMA": "J_SMA: 50Ω Ant",
+        "J_CT": "J_CT: SCT-013",
+        "U2": "U2: ADS1115",
+        "TB_EXP": "TB_EXP: A2/A3",
+        "T1": "T1: ZMPT101B AC SENSE",
+        "TB2": "TB2: 230V AC IN",
+        "K1": "K1: PUMP RELAY 10A",
+        "K2": "K2: AUX VALVE 10A",
+        "TB3": "TB3: ACTUATORS OUT",
+        "MOV1": "MOV1: 14D471K",
+        "R_SNUB1": "R_SNUB: 100Ω 1W",
+        "C_SNUB1": "C_SNUB: 0.1µF X2",
+        "SW1": "SW1: FORCE ON",
+        "SW2": "SW2: FORCE OFF",
+        "LED_5V": "5V PWR",
+        "LED_3V3": "3V3 RF",
+        "LED_PUMP": "PUMP ACTIVE",
+        "U5": "U5: PC817 (OPTO 1)",
+        "U6": "U6: PC817 (OPTO 2)",
+        "U1": "U1: AMS1117-3.3",
+        "U3": "U3: ACS712-30A",
+        "U4": "U4: LM358",
+    }
+
+    for ref, lbl in component_labels.items():
+        if ref in positions:
+            px, py, _ = positions[ref]
+            lines.append(f'  (gr_text "{lbl}" (at {px} {py + 4.5}) (layer "F.SilkS") (effects (font (size 0.8 0.8) (thickness 0.12))))')
 
     for part in circuit.parts:
         px, py, rot = positions.get(part.ref, (x0 + 25.0, y0 + 30.0, 0))
