@@ -29,6 +29,15 @@ Entry Template
 - Notes: <optional follow-ups/known issues>
 ```
 
+### [Receiver PCB Fix]: Footprint Coordinate Offset Resolution & Full 3D Model Linking
+- Date: 2026-11-02
+- Time (UTC): 06:48Z
+- Branch/PR: main
+- Files Changed (high level): scripts/generate_wilo_pcb.py, output/wilo_receiver/
+- Details: See [receiver-pcb-usbc-and-transient-upgrade-02-11-2026.md](receiver-pcb-usbc-and-transient-upgrade-02-11-2026.md)
+- Verification: `kicad-cli pcb render --quality high` raytraced 3D render (iso 565 KB, top 306 KB), `pytest -q` (9 passed 100%)
+- Notes: Diagnosed root cause of empty 3D board: footprints in cache contained redundant `(at 0 0)` tags that overrode the placement coordinates. Fixed `_load_and_embed_footprint` to strip redundant offsets, re-linked all 22 3D STEP models to `E:/kicad/share/kicad/3dmodels`, and added silkscreen labels (`gr_text`) for every component across Zone 1 and Zone 2.
+
 ### [Receiver Companion Firmware]: Sensor Calibration & Safety Protection Algorithms
 - Date: 2026-11-02
 - Time (UTC): 06:35Z
@@ -52,6 +61,3 @@ Entry Template
 - Time (UTC): 06:10Z
 - Branch/PR: main
 - Files Changed (high level): circuitron/circuits/wilo_receiver.py, scripts/, tests/, output/wilo_receiver/
-- Details: See [receiver-pcb-usbc-and-transient-upgrade-02-11-2026.md](receiver-pcb-usbc-and-transient-upgrade-02-11-2026.md)
-- Verification: pytest tests/test_wilo_receiver.py tests/test_artifact_generation.py -v (4 passed), SKiDL ERC 0 errors, KiCad 10 raytraced 3D rendering (kicad-cli pcb render)
-- Notes: Standard USB-C 16-pin connector with 5.1k CC pull-downs, 10uF+0.1uF LoRa decoupling, 100nF ADC decoupling, A2/A3 expansion terminal, 3.5mm CT clamp audio jack + 33-ohm burden + DC bias network, 14D471K MOV + RC snubber across pump relay, 330-ohm status LED resistor.
