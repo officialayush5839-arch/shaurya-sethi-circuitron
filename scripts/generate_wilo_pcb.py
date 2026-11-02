@@ -1,41 +1,51 @@
-"""Wilo Water Pump Automation Receiver PCB Generation Script.
+"""Generate KiCad PCB layout, Schematic, and BOM artifacts for the Wilo Receiver Station.
 
-Generates complete KiCad manufacturing artifacts:
-- KiCad Netlist (wilo_receiver.net)
-- KiCad Schematic (wilo_receiver.sch & wilo_receiver.kicad_sch)
-- KiCad PCB Layout (wilo_receiver.kicad_pcb) with 85x65mm dual-zone isolation layout
-- Bill of Materials CSV (bom.csv)
+Uses the SKiDL circuit model to output:
+- output/wilo_receiver/wilo_receiver.kicad_pcb (Dual-zone, complete footprint layout with zero overlaps)
+- output/wilo_receiver/wilo_receiver.kicad_sch & .sch (Schematic)
+- output/wilo_receiver/wilo_receiver.net (KiCad netlist)
+- output/wilo_receiver/bom.csv (Bill of Materials with component groupings)
+- output/wilo_receiver/wilo_receiver.kicad_pro (Project file)
 """
+import csv
 import os
 import re
-import csv
 from pathlib import Path
 from circuitron.circuits.wilo_receiver import create_wilo_receiver_circuit
 
-FP_SEARCH_DIRS = [
-    str(Path(__file__).parent.parent / "circuitron" / "footprints_cache"),
-    "E:/kicad/share/kicad/footprints",
-    "C:/Program Files/KiCad/share/kicad/footprints",
-    "C:/Program Files/KiCad/8.0/share/kicad/footprints",
-    "/usr/share/kicad/footprints",
-]
+_KICAD_FOOTPRINTS = Path("E:/kicad/share/kicad/footprints")
+_LOCAL_FOOTPRINT_CACHE = Path("circuitron/footprints_cache")
 
 
-def _find_kicad_mod_file(fp_identifier: str) -> Path | None:
-    """Find the .kicad_mod file for a given 'Library:Footprint' identifier."""
-    if ":" not in fp_identifier:
-        return None
-    lib, name = fp_identifier.split(":", 1)
-    
-    # Check local cache first
-    cache_cand = Path(__file__).parent.parent / "circuitron" / "footprints_cache" / f"{lib}_{name}.kicad_mod"
-    if cache_cand.exists():
-        return cache_cand
+def _find_footprint_file(fp_identifier: str) -> Path | None:
+    """Find a footprint (.kicad_mod) file either from local cache or KiCad system libraries."""
+    if ":" in fp_identifier:
+        lib_name, mod_name = fp_identifier.split(":", 1)
+    else:
+        lib_name = ""
+        mod_name = fp_identifier
 
-    for base in FP_SEARCH_DIRS:
-        cand = Path(base) / f"{lib}.pretty" / f"{name}.kicad_mod"
-        if cand.exists():
-            return cand
+    # 1. Check local cache first (works even without KiCad installed)
+    if _LOCAL_FOOTPRINT_CACHE.exists():
+        candidates = [
+            _LOCAL_FOOTPRINT_CACHE / f"{mod_name}.kicad_mod",
+            _LOCAL_FOOTPRINT_CACHE / f"{lib_name}_{mod_name}.kicad_mod",
+        ]
+        for c in candidates:
+            if c.exists():
+                return c
+
+    # 2. Check KiCad installation on external drive
+    if _KICAD_FOOTPRINTS.exists():
+        direct = _KICAD_FOOTPRINTS / f"{lib_name}.pretty" / f"{mod_name}.kicad_mod"
+        if direct.exists():
+            return direct
+        # Case-insensitive / partial match
+        for pretty_dir in _KICAD_FOOTPRINTS.glob("*.pretty"):
+            f = pretty_dir / f"{mod_name}.kicad_mod"
+            if f.exists():
+                return f
+
     return None
 
 
@@ -49,25 +59,37 @@ def _load_and_embed_footprint(
     pin_net_map: dict[str, str],
     net_id_map: dict[str, int],
 ) -> str:
-    """Load real .kicad_mod file from disk and embed it with net bindings and placement."""
-    mod_path = _find_kicad_mod_file(fp_identifier)
-    if mod_path and mod_path.exists():
-        mod_text = mod_path.read_text(encoding="utf-8")
-        # 1. Update header with placement coordinates (cleanly replacing any existing layer/at)
-        header_pattern = r'\(footprint\s+"[^"]*".*?(?=\(version|\(generator|\(descr|\(tags|\(property|\(attr|\(fp_|\(pad)'
+    """Load an authentic .kicad_mod footprint file, inject reference, value, position, and net bindings."""
+    fp_file = _find_footprint_file(fp_identifier)
+    if fp_file and fp_file.exists():
+        mod_text = fp_file.read_text(encoding="utf-8", errors="replace")
+
+        # Update root header with position & rotation
         mod_text = re.sub(
-            header_pattern,
-            f'(footprint "{fp_identifier}"\n    (layer "F.Cu")\n    (at {px} {py} {rot})\n  ',
+            r'^\s*\((?:footprint|module)\s+"?[^"\s\)]+"?',
+            f'  (footprint "{fp_identifier}" (layer "F.Cu") (at {px} {py} {rot})',
             mod_text,
             count=1,
-            flags=re.DOTALL,
+            flags=re.MULTILINE,
         )
 
-        # 2. Update Reference & Value properties
-        mod_text = re.sub(r'\(property\s+"Reference"\s+"[^"]*"', f'(property "Reference" "{ref}"', mod_text, count=1)
-        mod_text = re.sub(r'\(property\s+"Value"\s+"[^"]*"', f'(property "Value" "{val}"', mod_text, count=1)
+        # Update Reference property
+        mod_text = re.sub(
+            r'\(property\s+"Reference"\s+"[^"]*"\s*(\(at[^)]*\))?',
+            f'(property "Reference" "{ref}" (at 0 -2.5 {rot}) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15)))',
+            mod_text,
+            count=1,
+        )
 
-        # 3. Attach nets to all (pad ...) s-expressions
+        # Update Value property
+        mod_text = re.sub(
+            r'\(property\s+"Value"\s+"[^"]*"\s*(\(at[^)]*\))?',
+            f'(property "Value" "{val}" (at 0 2.5 {rot}) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15)))',
+            mod_text,
+            count=1,
+        )
+
+        # Inject nets into pad definitions
         result_chars = []
         i = 0
         n = len(mod_text)
@@ -138,11 +160,43 @@ def generate_bom_csv(circuit, output_path: Path) -> None:
             elif "SRD-05VDC" in name or "SANYOU" in fp:
                 desc = "5V Coil 10A 250VAC Power Relay"
             elif "PC817" in name:
-                desc = "Phototransistor Optocoupler"
+                desc = "Phototransistor Optocoupler (Galvanic Isolation)"
             elif "Conn_02x20" in name:
                 desc = "Raspberry Pi 40-Pin GPIO Header Receptacle"
             elif "AMS1117" in name:
                 desc = "3.3V 1A LDO Voltage Regulator"
+            elif "USB_C" in name:
+                desc = "USB Type-C 5V Power Supply Input (CC 5.1k Pull-Downs)"
+            elif "Varistor" in name or "14D471K" in val:
+                desc = "Metal-Oxide Varistor (275VAC Inductive Transient Suppressor)"
+            elif "AudioJack" in name or "SCT013" in val:
+                desc = "3.5mm Stereo Jack (SCT-013-000 CT Clamp Input)"
+            elif "0.1uF_630V" in val:
+                desc = "0.1uF 630V X2 Safety Film Capacitor (RC Snubber)"
+            elif "100_1W" in val:
+                desc = "100-Ohm 1W Flame-Proof Power Resistor (RC Snubber)"
+            elif "33_Ohm" in val:
+                desc = "33-Ohm 1% Precision Burden Resistor"
+            elif "5.1k" in val:
+                desc = "5.1k-Ohm 1% USB-C CC Logic Pull-Down Resistor"
+            elif "4.7k" in val:
+                desc = "4.7k-Ohm I2C Bus Pull-Up Resistor"
+            elif "470" in val:
+                desc = "470-Ohm 1% Resistor (LED / Optocoupler Input Limiting)"
+            elif "1k" in val:
+                desc = "1k-Ohm 1% NPN Base Drive Resistor"
+            elif "10k" in val:
+                desc = "10k-Ohm 1% Resistor (CT DC Bias Divider / NPN Base Pull-Down)"
+            elif "330" in val:
+                desc = "330-Ohm Status LED Current Limiting Resistor"
+            elif "ADC_EXP" in val:
+                desc = "2-Pin Terminal Block (ADS1115 Channels A2 & A3 Expansion)"
+            elif "AC_VOLT_SENSE" in val:
+                desc = "2-Pin Terminal Block (AC Mains Voltage Sampling Only - Not Board Power)"
+            elif "LOAD_ACTUATORS" in val:
+                desc = "3-Pin Terminal Block (Pump Contactor & Aux Valve Switched AC Outputs)"
+            elif "0.1uF" in val:
+                desc = "0.1uF Ceramic Decoupling Capacitor"
 
             writer.writerow([refs_str, len(refs), name, val, fp, desc])
 
@@ -215,9 +269,11 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
     lines.extend([
         f'  (gr_rect (start {slot_x - 0.75} {y0 + 8.0}) (end {slot_x + 0.75} {y0 + 40.0}) (stroke (width 0.1) (type default)) (fill solid) (layer "Edge.Cuts"))',
         f'  (gr_rect (start {slot_x - 0.75} {y0 + 66.0}) (end {slot_x + 0.75} {y0 + 78.0}) (stroke (width 0.1) (type default)) (fill solid) (layer "Edge.Cuts"))',
-        f'  (gr_text "ZONE 1: LOW-VOLTAGE DC LOGIC" (at {x0 + 32.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
-        f'  (gr_text "ZONE 2: 230V AC MAINS" (at {x0 + 94.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
+        f'  (gr_text "ZONE 1: LOW-VOLTAGE DC LOGIC (5V USB-C)" (at {x0 + 32.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
+        f'  (gr_text "ZONE 2: 230V AC SENSE & SWITCHING" (at {x0 + 94.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
         f'  (gr_text "ISOLATION BARRIER (5mm CREEPAGE)" (at {slot_x - 1.5} {y0 + 24.0} 90) (layer "F.SilkS") (effects (font (size 1.0 1.0) (thickness 0.18))))',
+        f'  (gr_text "MAIN POWER: 5V DC USB-C ONLY" (at {x0 + 20.0} {y0 + 82.0}) (layer "F.SilkS") (effects (font (size 1.1 1.1) (thickness 0.2))))',
+        f'  (gr_text "TB2: 230V AC SENSE ONLY" (at {x0 + 104.0} {y0 + 5.0}) (layer "F.SilkS") (effects (font (size 1.0 1.0) (thickness 0.18))))',
     ])
 
     # 3. Mounting Holes (M2.5 for Raspberry Pi Zero mounting in Zone 1)
@@ -232,40 +288,71 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
     positions = {
         # Zone 1 (Low-Voltage DC Logic): x0 + [0 .. 66]
         "J1": (x0 + 8.5, y0 + 10.5, 90),           # RPi 40-pin header along top of Zone 1 (spans x0+8.5 to x0+56.8)
-        "R_PU1": (x0 + 30.0, y0 + 20.0, 0),        # 4.7k I2C pull-up resistor
-        "R_PU2": (x0 + 36.0, y0 + 20.0, 0),        # 4.7k I2C pull-up resistor
+        "R_PU1": (x0 + 30.0, y0 + 19.0, 0),        # 4.7k I2C pull-up resistor
+        "R_PU2": (x0 + 36.0, y0 + 19.0, 0),        # 4.7k I2C pull-up resistor
+        "TB_EXP": (x0 + 54.0, y0 + 19.0, 0),       # ADC A2/A3 Expansion Screw Terminal Block
+        "J_CT": (x0 + 6.0, y0 + 26.0, 270),        # 3.5mm CT Clamp Jack (facing left edge)
+        "R_BURDEN": (x0 + 16.0, y0 + 24.0, 0),     # 33-ohm CT Burden Resistor
+        "R_BIAS1": (x0 + 22.0, y0 + 23.0, 0),      # 10k CT Bias Resistor 1
+        "R_BIAS2": (x0 + 22.0, y0 + 27.0, 0),      # 10k CT Bias Resistor 2
+        "C_BIAS": (x0 + 28.0, y0 + 25.0, 0),       # 10uF CT Bias Filter Cap
         "J_SMA": (x0 + 4.0, y0 + 42.0, 90),         # SMA antenna connector on left edge
         "U_LORA": (x0 + 20.0, y0 + 42.0, 0),        # SX1278 16-pin Castellated module (spans x0+12 to x0+28)
-        "U2": (x0 + 48.0, y0 + 36.0, 0),            # ADS1115 ADC MSOP-10 (18mm clearance from Ra-02)
-        "Q1": (x0 + 46.0, y0 + 48.0, 0),            # NPN Driver 1 (Relay 1)
-        "Q2": (x0 + 56.0, y0 + 48.0, 0),            # NPN Driver 2 (Relay 2)
-        "LED_5V": (x0 + 12.0, y0 + 58.0, 0),        # 5V Power LED
-        "LED_3V3": (x0 + 22.0, y0 + 58.0, 0),       # 3.3V Radio LED
-        "LED_PUMP": (x0 + 32.0, y0 + 58.0, 0),      # Pump Active LED
-        "TB1": (x0 + 6.5, y0 + 72.0, 270),          # 5V DC Input Terminal Block (facing left edge)
-        "C1": (x0 + 15.0, y0 + 72.0, 0),            # 10uF Input Filter Cap
-        "U1": (x0 + 22.0, y0 + 72.0, 0),            # AMS1117-3.3V LDO Regulator
-        "C2": (x0 + 29.0, y0 + 72.0, 0),            # 22uF Output Filter Cap
-        "SW1": (x0 + 42.0, y0 + 72.0, 0),           # Force ON 6mm Button
-        "SW2": (x0 + 56.0, y0 + 72.0, 0),           # Force OFF 6mm Button (14mm pitch from SW1)
+        "C_LORA1": (x0 + 15.0, y0 + 33.0, 0),      # 10uF LoRa VCC Electrolytic Cap
+        "C_LORA2": (x0 + 21.0, y0 + 33.0, 0),      # 0.1uF LoRa VCC Ceramic Cap
+        "U2": (x0 + 48.0, y0 + 36.0, 0),            # ADS1115 ADC MSOP-10
+        "C_ADS": (x0 + 54.0, y0 + 36.0, 0),        # 100nF ADS1115 Decoupling Cap
+        
+        # Relay Drivers and Optocoupler Networks (Zone 1 side)
+        "R_OPT1": (x0 + 61.0, y0 + 44.0, 0),       # 470-ohm Optocoupler 1 Input Limiting Resistor
+        "R_DRV1": (x0 + 52.0, y0 + 46.0, 0),       # 1k NPN Base Drive Resistor 1
+        "R_PD1": (x0 + 46.0, y0 + 52.0, 0),        # 10k NPN Base Pull-Down Resistor 1
+        "Q1": (x0 + 46.0, y0 + 47.0, 0),           # NPN Driver 1 (Relay 1)
+
+        "R_OPT2": (x0 + 61.0, y0 + 56.0, 0),       # 470-ohm Optocoupler 2 Input Limiting Resistor
+        "R_DRV2": (x0 + 52.0, y0 + 58.0, 0),       # 1k NPN Base Drive Resistor 2
+        "R_PD2": (x0 + 56.0, y0 + 52.0, 0),        # 10k NPN Base Pull-Down Resistor 2
+        "Q2": (x0 + 56.0, y0 + 47.0, 0),           # NPN Driver 2 (Relay 2)
+
+        # LEDs and Current Limiting Resistors
+        "R_LED2": (x0 + 12.0, y0 + 52.0, 0),       # 470-ohm 5V Power LED Resistor
+        "LED_5V": (x0 + 12.0, y0 + 56.0, 0),       # 5V Power LED
+        "R_LED3": (x0 + 20.0, y0 + 52.0, 0),       # 330-ohm 3.3V Radio LED Resistor
+        "LED_3V3": (x0 + 20.0, y0 + 56.0, 0),      # 3.3V Radio LED
+        "R_LED1": (x0 + 28.0, y0 + 56.0, 0),       # 330-ohm Pump Status LED Resistor
+        "LED_PUMP": (x0 + 36.0, y0 + 56.0, 0),     # Pump Active LED
+
+        # USB-C Input & 3.3V Power Generation
+        "J_USBC": (x0 + 5.5, y0 + 68.0, 270),      # USB Type-C 5V Input Receptacle (facing left edge)
+        "R_CC1": (x0 + 12.0, y0 + 65.0, 0),        # 5.1k CC1 Pull-Down Resistor
+        "R_CC2": (x0 + 12.0, y0 + 71.0, 0),        # 5.1k CC2 Pull-Down Resistor
+        "C1": (x0 + 18.0, y0 + 68.0, 0),           # 10uF Input Filter Cap
+        "U1": (x0 + 24.0, y0 + 68.0, 0),           # AMS1117-3.3V LDO Regulator
+        "C2": (x0 + 31.0, y0 + 68.0, 0),           # 22uF Output Filter Cap
+        "SW1": (x0 + 42.0, y0 + 68.0, 0),          # Force ON 6mm Button
+        "SW2": (x0 + 56.0, y0 + 68.0, 0),          # Force OFF 6mm Button (14mm pitch from SW1)
 
         # Boundary Optocouplers (Straddling slot_x = x0 + 67.0)
-        "U5": (x0 + 67.0, y0 + 48.0, 0),            # PC817 Optocoupler 1 (Relay 1)
-        "U6": (x0 + 67.0, y0 + 60.0, 0),            # PC817 Optocoupler 2 (Relay 2)
+        "U5": (x0 + 67.0, y0 + 48.0, 0),           # PC817 Optocoupler 1 (Relay 1)
+        "U6": (x0 + 67.0, y0 + 60.0, 0),           # PC817 Optocoupler 2 (Relay 2)
 
         # Zone 2 (High-Voltage 230V AC Mains): x0 + [69 .. 120]
-        "TB2": (x0 + 110.0, y0 + 12.0, 0),          # AC Mains Input Terminal Block (top right)
-        "T1": (x0 + 86.0, y0 + 18.0, 0),            # ZMPT101K Voltage Transformer
-        "R_HV1": (x0 + 80.0, y0 + 30.0, 0),         # High-voltage limiting resistor 1 (Axial)
-        "R_HV2": (x0 + 102.0, y0 + 30.0, 0),        # High-voltage limiting resistor 2 (Axial)
-        "U4": (x0 + 78.0, y0 + 40.0, 0),            # LM358 Op-Amp Conditioner (SOIC-8)
-        "C_F": (x0 + 88.0, y0 + 40.0, 0),           # Filter Cap 0805
-        "U3": (x0 + 104.0, y0 + 40.0, 0),           # ACS712T-30A Current Sensor (SOIC-8)
-        "D2": (x0 + 73.0, y0 + 56.0, 90),           # Flyback Diode 1 (Relay 1)
-        "K1": (x0 + 80.0, y0 + 56.0, 0),            # Songle SRD Relay 1 (Aux/Valve)
-        "D3": (x0 + 73.0, y0 + 73.0, 90),           # Flyback Diode 2 (Relay 2)
-        "K2": (x0 + 80.0, y0 + 73.0, 0),            # Songle SRD Relay 2 (Main Pump Contactor)
-        "TB3": (x0 + 112.0, y0 + 64.0, 90),         # Actuator Load Output Terminal (facing right edge)
+        "TB2": (x0 + 110.0, y0 + 12.0, 0),         # AC Mains Input Terminal Block (top right)
+        "T1": (x0 + 86.0, y0 + 18.0, 0),           # ZMPT101K Voltage Transformer
+        "R_HV1": (x0 + 80.0, y0 + 30.0, 0),        # High-voltage limiting resistor 1 (Axial)
+        "R_HV2": (x0 + 102.0, y0 + 30.0, 0),       # High-voltage limiting resistor 2 (Axial)
+        "U4": (x0 + 78.0, y0 + 40.0, 0),           # LM358 Op-Amp Conditioner (SOIC-8)
+        "C_F": (x0 + 88.0, y0 + 40.0, 0),          # Filter Cap 0805
+        "C_ACS": (x0 + 96.0, y0 + 40.0, 0),        # 0.1uF Decoupling Cap for ACS712
+        "U3": (x0 + 104.0, y0 + 40.0, 0),          # ACS712T-30A Current Sensor (SOIC-8)
+        "D2": (x0 + 73.0, y0 + 56.0, 90),          # Flyback Diode 1 (Relay 1)
+        "K1": (x0 + 80.0, y0 + 56.0, 0),           # Songle SRD Relay 1 (Main Pump Contactor)
+        "MOV1": (x0 + 102.0, y0 + 52.0, 0),        # 14D471K Varistor across Relay 1 contacts
+        "R_SNUB1": (x0 + 96.0, y0 + 46.0, 0),      # 100 ohm 1W Snubber Resistor
+        "C_SNUB1": (x0 + 106.0, y0 + 46.0, 0),     # 0.1uF 630V X2 Film Snubber Cap
+        "D3": (x0 + 73.0, y0 + 73.0, 90),          # Flyback Diode 2 (Relay 2)
+        "K2": (x0 + 80.0, y0 + 73.0, 0),           # Songle SRD Relay 2 (Aux Valve)
+        "TB3": (x0 + 112.0, y0 + 64.0, 90),        # Actuator Load Output Terminal (facing right edge)
     }
 
     for part in circuit.parts:
@@ -301,10 +388,10 @@ def generate_kicad_schematic_file(circuit, output_path: Path) -> None:
         '  (paper "A3")',
         '  (title_block',
         '    (title "Wilo Water Pump Automation — Receiver Station HAT")',
-        '    (date "2026-10-25")',
-        '    (rev "1.0")',
+        '    (date "2026-11-02")',
+        '    (rev "2.1")',
         '    (company "Circuitron Automation System")',
-        '    (comment 1 "Raspberry Pi Zero 2W Dual-Zone Isolated Controller")',
+        '    (comment 1 "Raspberry Pi Zero 2W Dual-Zone Isolated Controller with USB-C")',
         '  )',
     ]
 
@@ -321,6 +408,7 @@ def generate_kicad_schematic_file(circuit, output_path: Path) -> None:
         "+5V", "+3V3_RPI", "+3V3_LORA", "GND", "I2C_SDA", "I2C_SCL",
         "SPI0_MOSI", "SPI0_MISO", "SPI0_SCLK", "SPI0_CE0",
         "RELAY1_CTRL", "RELAY2_CTRL", "AC_L_IN", "AC_N_IN", "AC_PUMP_OUT",
+        "ADC_A0", "ADC_A1", "ADC_A2", "ADC_A3",
     ]
     for idx, lbl in enumerate(labels):
         lx = 20.0 + (idx % 5) * 60.0

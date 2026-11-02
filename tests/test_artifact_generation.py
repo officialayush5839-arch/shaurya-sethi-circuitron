@@ -18,5 +18,10 @@ def test_receiver_artifacts_generated(tmp_path):
     # Check BOM contents
     bom_content = (output_dir / "bom.csv").read_text(encoding="utf-8")
     assert "J1" in bom_content
+    assert "J_USBC" in bom_content
     assert "U_LORA" in bom_content
     assert "ACS712T-30A" in bom_content
+    assert "MOV1" in bom_content
+    assert "R_OPT1" in bom_content
+    assert "R_LED2" in bom_content
+    assert "C_ACS" in bom_content

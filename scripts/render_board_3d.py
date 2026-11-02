@@ -57,43 +57,49 @@ def render_3d_pcb(output_png: Path):
     # J1: Raspberry Pi Zero 2W 40-Pin Header (Black 8.5mm tall socket)
     j1 = create_box(8.5 - 2.5, 10.5 - 2.5, pcb_th, 50.8, 5.0, 8.5, '#1C1C1C', edgecolor='#333333')
     ax.add_collection3d(j1)
-    # Gold contacts on top of J1
     for c in range(0, 20, 2):
         gold_pad = create_box(8.5 + c * 2.54, 10.5, pcb_th + 8.5, 1.2, 1.2, 0.1, '#FFD166', edgecolor='#B7950B')
         ax.add_collection3d(gold_pad)
     ax.text(8.5 + 24.0, 10.5, pcb_th + 9.5, "J1: RPi Zero 2W", color='#FFD166', fontsize=9, fontweight='bold', ha='center')
 
+    # J_CT: 3.5mm CT Clamp Audio Jack
+    j_ct = create_box(6.0 - 4.5, 26.0 - 4.0, pcb_th, 9.0, 8.0, 5.0, '#212529', edgecolor='#78909C')
+    ax.add_collection3d(j_ct)
+    ax.text(6.0, 26.0, pcb_th + 6.0, "J_CT: 3.5mm CT", color='#90CAF9', fontsize=7, fontweight='bold', ha='center')
+
     # U_LORA: SX1278 Ra-02 LoRa Module (16x16x3.2mm)
     lora_pcb = create_box(20.0 - 8.0, 42.0 - 8.0, pcb_th, 16.0, 16.0, 0.8, '#263238', edgecolor='#37474F')
     ax.add_collection3d(lora_pcb)
-    # Silver RF Shielding Can
     lora_shield = create_box(20.0 - 6.5, 42.0 - 6.0, pcb_th + 0.8, 13.0, 11.0, 2.2, '#B0BEC5', edgecolor='#CFD8DC')
     ax.add_collection3d(lora_shield)
-    ax.text(20.0, 42.0, pcb_th + 3.8, "Ra-02 LoRa\n433MHz", color='#263238', fontsize=8, fontweight='bold', ha='center')
+    ax.text(20.0, 42.0, pcb_th + 3.5, "SX1278 Ra-02\n433MHz", color='#263238', fontsize=8, fontweight='bold', ha='center')
 
-    # J_SMA: SMA 50Ω Antenna Connector (Gold Brass barrel)
-    sma_base = create_box(4.0 - 3.5, 42.0 - 3.5, pcb_th, 7.0, 7.0, 4.0, '#D97706', edgecolor='#F59E0B')
-    ax.add_collection3d(sma_base)
-    sma_barrel = create_box(4.0 - 2.0, 42.0 - 2.0, pcb_th + 4.0, 4.0, 4.0, 6.0, '#F59E0B', edgecolor='#FBBF24')
-    ax.add_collection3d(sma_barrel)
-    ax.text(4.0, 42.0, pcb_th + 11.0, "SMA 50Ω", color='#F59E0B', fontsize=8, fontweight='bold', ha='center')
+    # J_SMA: SMA 50-Ohm Connector (Gold Plated)
+    sma = create_box(4.0 - 3.5, 42.0 - 3.5, pcb_th, 7.0, 7.0, 6.0, '#B45309', edgecolor='#F59E0B')
+    ax.add_collection3d(sma)
+    ax.text(4.0, 42.0, pcb_th + 7.0, "SMA 50Ω", color='#F59E0B', fontsize=7, fontweight='bold', ha='center')
 
     # U2: ADS1115 16-Bit ADC (MSOP-10, 1.1mm tall)
     u2 = create_box(48.0 - 2.0, 36.0 - 1.5, pcb_th, 4.0, 3.0, 1.2, '#1A1A1A', edgecolor='#424242')
     ax.add_collection3d(u2)
     ax.text(48.0, 36.0, pcb_th + 2.0, "U2: ADS1115", color='#A8DADC', fontsize=8, fontweight='bold', ha='center')
 
-    # TB1: 5V DC Input Screw Terminal (Green Phoenix 10mm tall)
-    tb1 = create_box(6.5 - 4.0, 72.0 - 5.5, pcb_th, 8.0, 11.0, 10.0, '#2E7D32', edgecolor='#4CAF50')
-    ax.add_collection3d(tb1)
-    ax.text(6.5, 72.0, pcb_th + 11.5, "TB1: 5V DC", color='#81C784', fontsize=8, fontweight='bold', ha='center')
+    # TB_EXP: ADC Expansion Terminal Block (A2, A3)
+    tb_exp = create_box(54.0 - 4.5, 19.0 - 3.5, pcb_th, 9.0, 7.0, 8.5, '#2E7D32', edgecolor='#4CAF50')
+    ax.add_collection3d(tb_exp)
+    ax.text(54.0, 19.0, pcb_th + 9.5, "TB_EXP: A2/A3", color='#81C784', fontsize=7, fontweight='bold', ha='center')
+
+    # J_USBC: USB Type-C Receptacle 5V In (Metallic 3.5mm tall)
+    j_usbc = create_box(5.5 - 4.5, 68.0 - 4.5, pcb_th, 9.0, 9.0, 3.5, '#546E7A', edgecolor='#B0BEC5')
+    ax.add_collection3d(j_usbc)
+    ax.text(5.5, 68.0, pcb_th + 4.5, "USB-C 5V MAIN PWR", color='#90CAF9', fontsize=7.5, fontweight='bold', ha='center')
 
     # U1: AMS1117-3.3V LDO (SOT-223)
-    u1 = create_box(22.0 - 3.2, 72.0 - 1.8, pcb_th, 6.5, 3.5, 1.8, '#1E1E1E', edgecolor='#616161')
+    u1 = create_box(24.0 - 3.2, 68.0 - 1.8, pcb_th, 6.5, 3.5, 1.8, '#1E1E1E', edgecolor='#616161')
     ax.add_collection3d(u1)
-    ax.text(22.0, 72.0, pcb_th + 2.6, "AMS1117", color='#81C784', fontsize=7, fontweight='bold', ha='center')
+    ax.text(24.0, 68.0, pcb_th + 2.6, "AMS1117", color='#81C784', fontsize=7, fontweight='bold', ha='center')
 
-    # Push Buttons SW1 (Force ON) and SW2 (Force OFF) - 6x6x5mm with colored plungers
+    # Push Buttons SW1 (Force ON) and SW2 (Force OFF)
     for bx, col, lbl in [(42.0, '#2E7D32', 'FORCE ON'), (56.0, '#C62828', 'FORCE OFF')]:
         btn_body = create_box(bx - 3.0, 72.0 - 3.0, pcb_th, 6.0, 6.0, 3.5, '#455A64', edgecolor='#78909C')
         ax.add_collection3d(btn_body)
@@ -102,8 +108,8 @@ def render_3d_pcb(output_png: Path):
         ax.text(bx, 72.0, pcb_th + 7.0, lbl, color=col, fontsize=8, fontweight='bold', ha='center')
 
     # Status LEDs (0805)
-    for lx, col, lbl in [(12.0, '#22C55E', '5V'), (22.0, '#3B82F6', '3V3'), (32.0, '#EAB308', 'PUMP')]:
-        led = create_box(lx - 1.0, 58.0 - 0.6, pcb_th, 2.0, 1.2, 0.8, col, edgecolor='#FFFFFF')
+    for lx, col, lbl in [(12.0, '#22C55E', '5V'), (20.0, '#3B82F6', '3V3'), (36.0, '#EAB308', 'PUMP')]:
+        led = create_box(lx - 1.0, 56.0 - 0.6, pcb_th, 2.0, 1.2, 0.8, col, edgecolor='#FFFFFF')
         ax.add_collection3d(led)
 
     # Optocouplers U5, U6 (PC817 DIP-4 straddling boundary)
@@ -116,15 +122,14 @@ def render_3d_pcb(output_png: Path):
     # ZONE 2 COMPONENTS (230V AC MAINS & POWER)
     # =========================================================================
 
-    # TB2: 230V AC Mains In (Red/Green 10mm tall screw terminal)
+    # TB2: 230V AC Mains In (Red 10mm tall screw terminal)
     tb2 = create_box(110.0 - 5.5, 12.0 - 4.5, pcb_th, 11.0, 9.0, 10.0, '#B71C1C', edgecolor='#EF5350')
     ax.add_collection3d(tb2)
-    ax.text(110.0, 12.0, pcb_th + 11.5, "TB2: 230V AC IN", color='#EF5350', fontsize=9, fontweight='bold', ha='center')
+    ax.text(110.0, 12.0, pcb_th + 11.5, "TB2: AC SENSE (ZMPT101B)", color='#EF5350', fontsize=7.5, fontweight='bold', ha='center')
 
     # T1: ZMPT101B Potential Transformer (18x18x12mm Blue-Black block)
     t1 = create_box(86.0 - 9.0, 18.0 - 9.0, pcb_th, 18.0, 18.0, 12.0, '#0D1B2A', edgecolor='#415A77')
     ax.add_collection3d(t1)
-    # Toroidal coil cylinder on top
     coil = create_box(86.0 - 6.0, 18.0 - 6.0, pcb_th + 12.0, 12.0, 12.0, 1.5, '#415A77', edgecolor='#778DA9')
     ax.add_collection3d(coil)
     ax.text(86.0, 18.0, pcb_th + 15.0, "T1: ZMPT101B\nVoltage Sensor", color='#E0E1DD', fontsize=8, fontweight='bold', ha='center')
@@ -148,6 +153,15 @@ def render_3d_pcb(output_png: Path):
     k1 = create_box(80.0, 56.0 - 7.75, pcb_th, 19.0, 15.5, 15.5, '#1E88E5', edgecolor='#1565C0')
     ax.add_collection3d(k1)
     ax.text(80.0 + 9.5, 56.0, pcb_th + 16.5, "K1: SONGLE RELAY\n(WILO PUMP 10A)", color='#FFFFFF', fontsize=8, fontweight='bold', ha='center')
+
+    # MOV1 Varistor (14D471K Blue Disc) & RC Snubber
+    mov1 = create_box(102.0 - 4.5, 52.0 - 2.0, pcb_th, 9.0, 4.0, 11.0, '#0077B6', edgecolor='#03045E')
+    ax.add_collection3d(mov1)
+    ax.text(102.0, 52.0, pcb_th + 12.0, "MOV1: 14D471K", color='#90CAF9', fontsize=6, fontweight='bold', ha='center')
+
+    c_snub = create_box(106.0 - 4.5, 46.0 - 2.0, pcb_th, 9.0, 4.0, 8.0, '#D90429', edgecolor='#EF233C')
+    ax.add_collection3d(c_snub)
+    ax.text(106.0, 46.0, pcb_th + 9.0, "0.1uF X2", color='#FFFFFF', fontsize=5.5, ha='center')
 
     k2 = create_box(80.0, 73.0 - 7.75, pcb_th, 19.0, 15.5, 15.5, '#1E88E5', edgecolor='#1565C0')
     ax.add_collection3d(k2)

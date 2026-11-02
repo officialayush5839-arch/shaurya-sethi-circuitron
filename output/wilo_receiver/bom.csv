@@ -1,27 +1,41 @@
 Reference,Quantity,Part Name,Value,Footprint,Description
-C1,1,C,10uF,Capacitor_SMD:C_0805_2012Metric,Component C
+"C1, C_BIAS",2,C,10uF,Capacitor_SMD:C_0805_2012Metric,Component C
 C2,1,C,22uF,Capacitor_SMD:C_0805_2012Metric,Component C
+C_ADS,1,C,100nF,Capacitor_SMD:C_0805_2012Metric,Component C
 C_F,1,C,4.7nF,Capacitor_SMD:C_0805_2012Metric,Component C
+C_LORA1,1,CP,10uF,Capacitor_SMD:C_0805_2012Metric,Component CP
+"C_ACS, C_LORA2",2,C,0.1uF,Capacitor_SMD:C_0805_2012Metric,0.1uF Ceramic Decoupling Capacitor
+C_SNUB1,1,C,0.1uF_630V_X2,Capacitor_THT:C_Rect_L10.0mm_W4.0mm_P7.50mm_MKS4,0.1uF 630V X2 Safety Film Capacitor (RC Snubber)
 "D2, D3",2,1N4007,1N4007,Diode_SMD:D_SMA,Component 1N4007
 J1,1,Conn_02x20_Odd_Even,RPi_Zero_2W_Header,Connector_PinSocket_2.54mm:PinSocket_2x20_P2.54mm_Vertical,Raspberry Pi 40-Pin GPIO Header Receptacle
+J_CT,1,AudioJack3,SCT013_CT_Jack,Connector_Audio:Jack_3.5mm_CUI_SJ1-3513N_Horizontal,3.5mm Stereo Jack (SCT-013-000 CT Clamp Input)
 J_SMA,1,SMA_Connector,SMA_50_Ohm,Connector_Coaxial:SMA_Amphenol_132134-10_Vertical,Component SMA_Connector
+J_USBC,1,USB_C_Receptacle_USB2.0_16P,USB_C_5V_IN,Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12,USB Type-C 5V Power Supply Input (CC 5.1k Pull-Downs)
 "K1, K2",2,SRD-05VDC-SL-C,Songle_5V_10A,Relay_THT:Relay_SPDT_SANYOU_SRD_Series_Form_C,5V Coil 10A 250VAC Power Relay
 LED_3V3,1,LED,Blue_3V3_LoRa,LED_SMD:LED_0805_2012Metric,Component LED
 LED_5V,1,LED,Green_5V_Power,LED_SMD:LED_0805_2012Metric,Component LED
 LED_PUMP,1,LED,Green_Pump_Active,LED_SMD:LED_0805_2012Metric,Component LED
+MOV1,1,Varistor,14D471K_275VAC,Varistor:RV_Disc_D12mm_W4.2mm_P7.5mm,Metal-Oxide Varistor (275VAC Inductive Transient Suppressor)
 "Q1, Q2",2,MMBT3904,2N2222_NPN,Package_TO_SOT_SMD:SOT-23,Component MMBT3904
+"R_BIAS1, R_BIAS2, R_PD1, R_PD2",4,R,10k,Resistor_SMD:R_0805_2012Metric,10k-Ohm 1% Resistor (CT DC Bias Divider / NPN Base Pull-Down)
+R_BURDEN,1,R,33_Ohm,Resistor_SMD:R_0805_2012Metric,33-Ohm 1% Precision Burden Resistor
+"R_CC1, R_CC2",2,R,5.1k,Resistor_SMD:R_0805_2012Metric,5.1k-Ohm 1% USB-C CC Logic Pull-Down Resistor
+"R_DRV1, R_DRV2",2,R,1k,Resistor_SMD:R_0805_2012Metric,1k-Ohm 1% NPN Base Drive Resistor
 "R_HV1, R_HV2",2,R,41.2k_1W,Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal,Component R
-"R_PU1, R_PU2",2,R,4.7k,Resistor_SMD:R_0805_2012Metric,Component R
+"R_LED1, R_LED3",2,R,330,Resistor_SMD:R_0805_2012Metric,330-Ohm Status LED Current Limiting Resistor
+"R_LED2, R_OPT1, R_OPT2",3,R,470,Resistor_SMD:R_0805_2012Metric,470-Ohm 1% Resistor (LED / Optocoupler Input Limiting)
+"R_PU1, R_PU2",2,R,4.7k,Resistor_SMD:R_0805_2012Metric,4.7k-Ohm I2C Bus Pull-Up Resistor
+R_SNUB1,1,R,100_1W,Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal,100-Ohm 1W Flame-Proof Power Resistor (RC Snubber)
 SW1,1,SW_Push,Force_ON,Button_Switch_THT:SW_PUSH_6mm,Component SW_Push
 SW2,1,SW_Push,Force_OFF,Button_Switch_THT:SW_PUSH_6mm,Component SW_Push
 T1,1,ZMPT101B,ZMPT101B_Transformer,Transformer_THT:Transformer_Zeming_ZMPT101K,Precision AC Voltage Transformer
-TB1,1,Screw_Terminal_01x02,5V_DC_IN,"TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal",Component Screw_Terminal_01x02
-TB2,1,Screw_Terminal_01x02,AC_MAINS_IN,"TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal",Component Screw_Terminal_01x02
-TB3,1,Screw_Terminal_01x03,LOAD_ACTUATORS_OUT,"TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-3-5.08_1x03_P5.08mm_Horizontal",Component Screw_Terminal_01x03
+TB2,1,Screw_Terminal_01x02,AC_VOLT_SENSE_IN,"TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal",2-Pin Terminal Block (AC Mains Voltage Sampling Only - Not Board Power)
+TB3,1,Screw_Terminal_01x03,LOAD_ACTUATORS_OUT,"TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-3-5.08_1x03_P5.08mm_Horizontal",3-Pin Terminal Block (Pump Contactor & Aux Valve Switched AC Outputs)
+TB_EXP,1,Screw_Terminal_01x02,ADC_EXP_A2_A3,"TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal",2-Pin Terminal Block (ADS1115 Channels A2 & A3 Expansion)
 U1,1,AMS1117-3.3,AMS1117-3.3,Package_TO_SOT_SMD:SOT-223-3_TabPin2,3.3V 1A LDO Voltage Regulator
 U2,1,ADS1115IDGSR,ADS1115,Package_SO:MSOP-10_3x3mm_P0.5mm,16-Bit 4-Channel I2C ADC
 U3,1,ACS712ELCTR-30A-T,ACS712T-30A,Package_SO:SOIC-8_3.9x4.9mm_P1.27mm,Hall-Effect AC Current Sensor IC (30A)
 U4,1,LM358,LM358_Conditioner,Package_SO:SOIC-8_3.9x4.9mm_P1.27mm,Component LM358
-U5,1,PC817,PC817_Pump,Package_DIP:DIP-4_W7.62mm,Phototransistor Optocoupler
-U6,1,PC817,PC817_Aux,Package_DIP:DIP-4_W7.62mm,Phototransistor Optocoupler
+U5,1,PC817,PC817_Pump,Package_DIP:DIP-4_W7.62mm,Phototransistor Optocoupler (Galvanic Isolation)
+U6,1,PC817,PC817_Aux,Package_DIP:DIP-4_W7.62mm,Phototransistor Optocoupler (Galvanic Isolation)
 U_LORA,1,Ra-02_SX1278,SX1278_433MHz,RF_Module:Ai-Thinker-Ra-01-LoRa,433MHz LoRa Transceiver Module
