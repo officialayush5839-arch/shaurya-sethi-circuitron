@@ -29,6 +29,15 @@ Entry Template
 - Notes: <optional follow-ups/known issues>
 ```
 
+### [Receiver Companion Firmware]: Sensor Calibration & Safety Protection Algorithms
+- Date: 2026-11-02
+- Time (UTC): 06:35Z
+- Branch/PR: main
+- Files Changed (high level): scripts/companion_firmware/, tests/test_companion_firmware.py
+- Details: See [receiver-pcb-usbc-and-transient-upgrade-02-11-2026.md](receiver-pcb-usbc-and-transient-upgrade-02-11-2026.md)
+- Verification: `pytest -q` (9 passed across hardware and firmware test suites)
+- Notes: Implemented `tank_config.py` with all hardware pin assignments and safety constants, `calibrate_voltage.py` for True-RMS ZMPT101B scaling, `measure_current.py` with stateful dry-run (< 1.5A for > 2s) and overload (> 13.7A for > 3s) protection timers.
+
 ### [Receiver PCB Component Audit & Protection Hardening]: Optocoupler Drivers, LED Resistors, ACS712 Decoupling & Dual EMI Architecture
 - Date: 2026-11-02
 - Time (UTC): 06:30Z
