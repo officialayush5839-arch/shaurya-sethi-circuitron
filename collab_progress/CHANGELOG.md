@@ -19,6 +19,15 @@ Entry Template
 - Copy/paste and fill all fields. Keep newest entries at the top.
 
 ```
+
+### [Receiver PCB Redesign Rev 3.0]: 140x95mm Single-Zone Architecture & Perimeter Connectors
+- Date: 2026-11-04
+- Time (UTC): 13:30Z
+- Branch/PR: main
+- Files Changed (high level): scripts/generate_wilo_pcb.py, scripts/generate_board_png.py, tests/test_artifact_generation.py, output/wilo_receiver/
+- Details: Redesigned Wilo Receiver PCB to Rev 3.0 based on user requirements. Expanded board dimensions from 120x85 mm to 140x95 mm for uncrowded, spacious routing. Removed milled isolation slots and dual-zone dividing silkscreen barriers, unifying the entire board into a single 5V USB-C powered ground plane. Relocated all connectors to the outer board perimeter and corners (J1 40-pin header top edge, TB_EXP top edge, TB2 AC sense top-right corner, J_SMA top-left edge, J_CT mid-left edge, J_USBC bottom-left corner, SW1/SW2 bottom edge, TB3 actuator load bottom-right corner). Logically centralized and arranged all ICs (U_LORA, U1, U2, U3, U4, U5, U6, Q1, Q2) to minimize trace lengths. Re-architected schematic into 7 framed modular functional blocks with aligned symbols and clean netlabels. Synchronized desktop zip package and pushed dedicated standalone repository `officialayush5839-arch/Wilo-Receiver-PCB`.
+- Verification: Pytest passed 9/9 tests (100%), verified zero component/pad overlaps, verified 140x95mm single-zone layout geometry, committed and pushed to remote GitHub repo (commit `9123d4f`).
+
 ## [Title]: Short description of the change
 - Date: YYYY-MM-DD
 - Time (UTC): HH:MMZ
@@ -28,6 +37,15 @@ Entry Template
 - Verification: <tests run, tools, results>
 - Notes: <optional follow-ups/known issues>
 ```
+
+### [Receiver PCB Redesign Rev 3.0]: 140x95mm Single-Zone Architecture & Perimeter Connectors
+- Date: 2026-11-04
+- Time (UTC): 13:30Z
+- Branch/PR: main
+- Files Changed (high level): scripts/generate_wilo_pcb.py, scripts/generate_board_png.py, tests/test_artifact_generation.py, output/wilo_receiver/
+- Details: Redesigned Wilo Receiver PCB to Rev 3.0 based on user requirements. Expanded board dimensions from 120x85 mm to 140x95 mm for uncrowded, spacious routing. Removed milled isolation slots and dual-zone dividing silkscreen barriers, unifying the entire board into a single 5V USB-C powered ground plane. Relocated all connectors to the outer board perimeter and corners (J1 40-pin header top edge, TB_EXP top edge, TB2 AC sense top-right corner, J_SMA top-left edge, J_CT mid-left edge, J_USBC bottom-left corner, SW1/SW2 bottom edge, TB3 actuator load bottom-right corner). Logically centralized and arranged all ICs (U_LORA, U1, U2, U3, U4, U5, U6, Q1, Q2) to minimize trace lengths. Re-architected schematic into 7 framed modular functional blocks with aligned symbols and clean netlabels. Synchronized desktop zip package and pushed dedicated standalone repository `officialayush5839-arch/Wilo-Receiver-PCB`.
+- Verification: Pytest passed 9/9 tests (100%), verified zero component/pad overlaps, verified 140x95mm single-zone layout geometry, committed and pushed to remote GitHub repo (commit `9123d4f`).
+
 
 ### [Receiver PCB Pad Deconfliction]: R_HV Resistors and Snubber Pad Separation
 - Date: 2026-11-02
