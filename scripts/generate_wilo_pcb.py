@@ -310,17 +310,17 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
         # --- Left Edge Connectors ---
         "J_SMA": (x0 + 6.0, y0 + 26.0, 90),          # 433MHz SMA Antenna Connector (top-left edge)
         "J_CT": (x0 + 8.0, y0 + 52.0, 270),          # 3.5mm CT Clamp Jack (facing left edge)
-        "J_USBC": (x0 + 7.0, y0 + 84.0, 270),        # USB-C 5V Main Power Input (bottom-left corner)
+        "J_USBC": (x0 + 7.0, y0 + 82.0, 270),        # USB-C 5V Main Power Input (bottom-left corner)
 
-        # --- Bottom Edge Connectors & UI ---
-        "SW1": (x0 + 48.0, y0 + 86.0, 0),            # Force ON 6mm Tactile Button (bottom edge)
-        "SW2": (x0 + 62.0, y0 + 86.0, 0),            # Force OFF 6mm Tactile Button (bottom edge)
-        "LED_5V": (x0 + 76.0, y0 + 86.0, 0),         # 5V Power LED
-        "R_LED2": (x0 + 76.0, y0 + 90.0, 0),         # 470-ohm 5V Power LED Resistor
-        "LED_3V3": (x0 + 86.0, y0 + 86.0, 0),        # 3.3V Radio LED
-        "R_LED3": (x0 + 86.0, y0 + 90.0, 0),         # 330-ohm 3.3V Radio LED Resistor
-        "LED_PUMP": (x0 + 96.0, y0 + 86.0, 0),       # Pump Active Status LED
-        "R_LED1": (x0 + 96.0, y0 + 90.0, 0),         # 330-ohm Pump Status LED Resistor
+        # --- Bottom Edge UI: Push Buttons & Status Indicators ---
+        "SW1": (x0 + 44.0, y0 + 83.0, 0),            # Force ON 6mm Tactile Button (bottom edge)
+        "SW2": (x0 + 56.0, y0 + 83.0, 0),            # Force OFF 6mm Tactile Button (bottom edge)
+        "LED_5V": (x0 + 42.0, y0 + 72.0, 0),         # 5V Power LED
+        "R_LED2": (x0 + 42.0, y0 + 76.0, 0),         # 470-ohm 5V Power LED Resistor
+        "LED_3V3": (x0 + 50.0, y0 + 72.0, 0),        # 3.3V Radio LED
+        "R_LED3": (x0 + 50.0, y0 + 76.0, 0),         # 330-ohm 3.3V Radio LED Resistor
+        "LED_PUMP": (x0 + 58.0, y0 + 72.0, 0),       # Pump Active Status LED
+        "R_LED1": (x0 + 58.0, y0 + 76.0, 0),         # 330-ohm Pump Status LED Resistor
 
         # --- Bottom-Right Edge Connectors ---
         "TB3": (x0 + 130.0, y0 + 75.0, 90),          # Actuator Load Output Terminal: PUMP, VALVE, NEUT (bottom-right corner)
@@ -337,11 +337,11 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
         "C_BIAS": (x0 + 26.0, y0 + 54.0, 0),         # 10uF Bias Filter Cap
 
         # --- Power Supply Generation (Bottom-Left Subsystem) ---
-        "R_CC1": (x0 + 14.0, y0 + 80.0, 0),          # 5.1k CC1 Pull-Down Resistor
-        "R_CC2": (x0 + 14.0, y0 + 88.0, 0),          # 5.1k CC2 Pull-Down Resistor
-        "C1": (x0 + 20.0, y0 + 84.0, 0),             # 10uF Input Filter Cap
-        "U1": (x0 + 28.0, y0 + 84.0, 0),             # AMS1117-3.3V LDO Regulator (SOT-223)
-        "C2": (x0 + 36.0, y0 + 84.0, 0),             # 22uF Output Filter Cap
+        "R_CC1": (x0 + 13.0, y0 + 78.0, 0),          # 5.1k CC1 Pull-Down Resistor
+        "R_CC2": (x0 + 13.0, y0 + 86.0, 0),          # 5.1k CC2 Pull-Down Resistor
+        "C1": (x0 + 18.0, y0 + 82.0, 0),             # 10uF Input Filter Cap
+        "U1": (x0 + 26.0, y0 + 82.0, 0),             # AMS1117-3.3V LDO Regulator (SOT-223)
+        "C2": (x0 + 34.0, y0 + 82.0, 0),             # 22uF Output Filter Cap
 
         # --- Central Analog Hub ---
         "U2": (x0 + 60.0, y0 + 30.0, 0),             # ADS1115 16-Bit ADC (MSOP-10)
@@ -388,23 +388,23 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
         "J1": (x0 + 55.0, y0 + 6.0),
         "TB_EXP": (x0 + 98.0, y0 + 6.0),
         "TB2": (x0 + 128.0, y0 + 6.0),
-        "J_SMA": (x0 + 6.0, y0 + 32.5),
+        "J_SMA": (x0 + 6.0, y0 + 20.0),
         "U_LORA": (x0 + 26.0, y0 + 38.5),
         "C_LORA1": (x0 + 22.0, y0 + 13.5),
         "C_LORA2": (x0 + 28.0, y0 + 13.5),
-        "J_CT": (x0 + 14.0, y0 + 52.0),
+        "J_CT": (x0 + 8.0, y0 + 45.0),
         "R_BURDEN": (x0 + 20.0, y0 + 45.5),
         "R_BIAS1": (x0 + 20.0, y0 + 51.0),
         "R_BIAS2": (x0 + 20.0, y0 + 60.5),
         "C_BIAS": (x0 + 26.0, y0 + 57.0),
-        "J_USBC": (x0 + 7.0, y0 + 77.0),
-        "R_CC1": (x0 + 14.0, y0 + 77.5),
-        "R_CC2": (x0 + 14.0, y0 + 90.5),
-        "C1": (x0 + 20.0, y0 + 81.0),
-        "U1": (x0 + 28.0, y0 + 79.5),
-        "C2": (x0 + 36.0, y0 + 81.0),
-        "SW1": (x0 + 48.0, y0 + 92.0),
-        "SW2": (x0 + 62.0, y0 + 92.0),
+        "J_USBC": (x0 + 7.0, y0 + 74.0),
+        "R_CC1": (x0 + 13.0, y0 + 75.5),
+        "R_CC2": (x0 + 13.0, y0 + 88.5),
+        "C1": (x0 + 18.0, y0 + 79.5),
+        "U1": (x0 + 26.0, y0 + 77.0),
+        "C2": (x0 + 34.0, y0 + 79.5),
+        "SW1": (x0 + 44.0, y0 + 88.5),
+        "SW2": (x0 + 56.0, y0 + 88.5),
         "U2": (x0 + 60.0, y0 + 26.5),
         "C_ADS": (x0 + 66.0, y0 + 26.5),
         "R_PU1": (x0 + 56.0, y0 + 19.5),
@@ -434,9 +434,9 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
         "R_SNUB1": (x0 + 124.0, y0 + 62.0),
         "C_SNUB1": (x0 + 124.0, y0 + 70.0),
         "TB3": (x0 + 130.0, y0 + 65.0),
-        "LED_5V": (x0 + 76.0, y0 + 82.5),
-        "LED_3V3": (x0 + 86.0, y0 + 82.5),
-        "LED_PUMP": (x0 + 96.0, y0 + 82.5),
+        "LED_5V": (x0 + 42.0, y0 + 68.0),
+        "LED_3V3": (x0 + 50.0, y0 + 68.0),
+        "LED_PUMP": (x0 + 58.0, y0 + 68.0),
     }
 
     component_labels = {

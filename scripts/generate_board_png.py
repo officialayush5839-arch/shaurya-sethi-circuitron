@@ -43,7 +43,7 @@ def render_board_png(output_png: Path) -> None:
 
     # 3. Silkscreen System Title (Single Unified Zone)
     ax.text(x0 + 70.0, y0 + 3.2, "WILO WATER PUMP AUTOMATION — RECEIVER STATION HAT (140mm x 95mm)", color="#F8FAFC", fontsize=10.5, fontweight='bold', ha='center', va='center', zorder=3)
-    ax.text(x0 + 42.0, y0 + 92.5, "MAIN SYSTEM POWER: 5V DC USB-C ONLY (NO AC POWER SUPPLY)", color="#38BDF8", fontsize=8.0, fontweight='bold', ha='center', va='center', zorder=3)
+    ax.text(x0 + 70.0, y0 + 92.8, "MAIN SYSTEM POWER: 5V DC USB-C ONLY (NO AC POWER SUPPLY)", color="#38BDF8", fontsize=7.5, fontweight='bold', ha='center', va='center', zorder=3)
 
     # =========================================================================
     # TOP EDGE CONNECTORS: J1 (RPi 40-Pin Header), TB_EXP, TB2 (AC Voltage Sense)
@@ -89,35 +89,35 @@ def render_board_png(output_png: Path) -> None:
     ax.add_patch(patches.Rectangle((sma_x - 3.5, sma_y - 3.5), 7.0, 7.0, facecolor="#B45309", edgecolor="#F59E0B", linewidth=1.5, zorder=4))
     ax.add_patch(plt.Circle((sma_x, sma_y), 2.5, facecolor="#F59E0B", edgecolor="#D97706", linewidth=1.0, zorder=5))
     ax.add_patch(plt.Circle((sma_x, sma_y), 0.8, facecolor="#FEF08A", zorder=6))
-    ax.text(sma_x + 6.0, sma_y, "J_SMA: 50Ω Ant", color="#F59E0B", fontsize=7.5, fontweight='bold', va='center', zorder=7)
+    ax.text(sma_x, sma_y - 5.5, "J_SMA: 50Ω Ant", color="#F59E0B", fontsize=7.2, fontweight='bold', ha='center', va='center', zorder=7)
 
     # J_CT: 3.5mm SCT-013 CT Clamp Audio Jack (Mid-Left Edge)
     jct_x, jct_y = x0 + 8.0, y0 + 52.0
     ax.add_patch(patches.Rectangle((jct_x - 4.5, jct_y - 4.0), 9.0, 8.0, facecolor="#1E293B", edgecolor="#64748B", linewidth=1.2, zorder=4))
     ax.add_patch(plt.Circle((jct_x, jct_y), 2.2, facecolor="#334155", edgecolor="#94A3B8", linewidth=1.0, zorder=5))
     ax.add_patch(plt.Circle((jct_x, jct_y), 1.1, facecolor="#0B0F19", zorder=6))
-    ax.text(jct_x + 6.2, jct_y, "J_CT: 3.5mm\nCT Clamp", color="#93C5FD", fontsize=7.2, fontweight='bold', va='center', zorder=7)
+    ax.text(jct_x, jct_y - 5.8, "J_CT: 3.5mm CT Clamp", color="#93C5FD", fontsize=6.8, fontweight='bold', ha='center', va='center', zorder=7)
 
     # J_USBC: USB Type-C 5V Main Power Input (Bottom-Left Corner)
-    usbc_x, usbc_y = x0 + 7.0, y0 + 84.0
+    usbc_x, usbc_y = x0 + 7.0, y0 + 82.0
     ax.add_patch(patches.Rectangle((usbc_x - 4.5, usbc_y - 4.5), 9.0, 9.0, facecolor="#334155", edgecolor="#94A3B8", linewidth=1.5, zorder=4))
     ax.add_patch(patches.FancyBboxPatch((usbc_x - 3.5, usbc_y - 1.8), 7.0, 3.6, boxstyle="round,pad=0,rounding_size=1.5", facecolor="#0F172A", edgecolor="#CBD5E1", linewidth=1.0, zorder=5))
-    ax.text(usbc_x + 6.5, usbc_y - 2.0, "J_USBC: 5V IN\n(MAIN POWER)", color="#60A5FA", fontsize=7.2, fontweight='bold', va='center', zorder=7)
+    ax.text(usbc_x, usbc_y - 6.5, "J_USBC: 5V IN\n(MAIN POWER)", color="#60A5FA", fontsize=6.8, fontweight='bold', ha='center', va='center', zorder=7)
 
     # CC Resistors R_CC1, R_CC2
-    for rcc_ref, rcc_y in [("R_CC1", y0 + 80.0), ("R_CC2", y0 + 88.0)]:
-        ax.add_patch(patches.Rectangle((x0 + 14.0 - 0.8, rcc_y - 0.5), 1.6, 1.0, facecolor="#334155", edgecolor="#64748B", linewidth=0.6, zorder=4))
-        ax.text(x0 + 14.0, rcc_y - 1.3, f"{rcc_ref}: 5.1k", color="#94A3B8", fontsize=5.2, ha='center', va='center', zorder=5)
+    for rcc_ref, rcc_y in [("R_CC1", y0 + 78.0), ("R_CC2", y0 + 86.0)]:
+        ax.add_patch(patches.Rectangle((x0 + 13.0 - 0.8, rcc_y - 0.5), 1.6, 1.0, facecolor="#334155", edgecolor="#64748B", linewidth=0.6, zorder=4))
+        ax.text(x0 + 13.0, rcc_y - 1.3, f"{rcc_ref}: 5.1k", color="#94A3B8", fontsize=5.0, ha='center', va='center', zorder=5)
 
     # Filter Capacitors C1 (10uF) & C2 (22uF)
-    ax.add_patch(patches.Rectangle((x0 + 20.0 - 1.0, y0 + 84.0 - 0.6), 2.0, 1.2, facecolor="#B45309", edgecolor="#F59E0B", linewidth=0.8, zorder=4))
-    ax.text(x0 + 20.0, y0 + 81.0, "C1: 10uF", color="#FDE047", fontsize=5.5, ha='center', va='center', zorder=5)
+    ax.add_patch(patches.Rectangle((x0 + 18.0 - 1.0, y0 + 82.0 - 0.6), 2.0, 1.2, facecolor="#B45309", edgecolor="#F59E0B", linewidth=0.8, zorder=4))
+    ax.text(x0 + 18.0, y0 + 79.5, "C1: 10uF", color="#FDE047", fontsize=5.5, ha='center', va='center', zorder=5)
 
-    ax.add_patch(patches.Rectangle((x0 + 36.0 - 1.0, y0 + 84.0 - 0.6), 2.0, 1.2, facecolor="#B45309", edgecolor="#F59E0B", linewidth=0.8, zorder=4))
-    ax.text(x0 + 36.0, y0 + 81.0, "C2: 22uF", color="#FDE047", fontsize=5.5, ha='center', va='center', zorder=5)
+    ax.add_patch(patches.Rectangle((x0 + 34.0 - 1.0, y0 + 82.0 - 0.6), 2.0, 1.2, facecolor="#B45309", edgecolor="#F59E0B", linewidth=0.8, zorder=4))
+    ax.text(x0 + 34.0, y0 + 79.5, "C2: 22uF", color="#FDE047", fontsize=5.5, ha='center', va='center', zorder=5)
 
     # U1: AMS1117-3.3V LDO Regulator (SOT-223)
-    u1_x, u1_y = x0 + 28.0, y0 + 84.0
+    u1_x, u1_y = x0 + 26.0, y0 + 82.0
     ax.add_patch(patches.Rectangle((u1_x - 3.5, u1_y - 2.5), 7.0, 5.0, facecolor="#0F172A", edgecolor="#64748B", linewidth=1.2, zorder=4))
     ax.add_patch(patches.Rectangle((u1_x - 2.5, u1_y + 2.5), 5.0, 1.5, facecolor="#94A3B8", edgecolor="#64748B", linewidth=0.8, zorder=4))
     ax.text(u1_x, u1_y, "AMS1117\n3.3V", color="#F8FAFC", fontsize=6.5, fontweight='bold', ha='center', va='center', zorder=5)
@@ -281,23 +281,25 @@ def render_board_png(output_png: Path) -> None:
     # =========================================================================
     # BOTTOM EDGE UI: Push Buttons (SW1, SW2) & Status LEDs
     # =========================================================================
-    buttons = [
-        ("SW1", "FORCE ON", x0 + 48.0, "#166534"),
-        ("SW2", "FORCE OFF", x0 + 62.0, "#991B1B"),
-    ]
-    for b_ref, b_lbl, bx, b_col in buttons:
-        ax.add_patch(patches.Rectangle((bx - 3.2, y0 + 86.0 - 3.2), 6.4, 6.4, facecolor="#334155", edgecolor="#64748B", linewidth=1.2, zorder=4))
-        ax.add_patch(plt.Circle((bx, y0 + 86.0), 2.0, facecolor=b_col, edgecolor="#FFFFFF", linewidth=1.0, zorder=5))
-        ax.text(bx, y0 + 92.5, f"{b_ref}: {b_lbl}", color="#F8FAFC", fontsize=7.0, fontweight='bold', ha='center', va='center', zorder=6)
-
+    # Status Indicators Cluster (Spacious area above buttons, zero relay overlap)
     leds = [
-        ("LED_5V", "5V PWR", x0 + 76.0, "#22C55E"),
-        ("LED_3V3", "3V3 RF", x0 + 86.0, "#3B82F6"),
-        ("LED_PUMP", "PUMP ON", x0 + 96.0, "#EAB308"),
+        ("LED_5V", "5V PWR", x0 + 42.0, "#22C55E"),
+        ("LED_3V3", "3V3 RF", x0 + 50.0, "#3B82F6"),
+        ("LED_PUMP", "PUMP ON", x0 + 58.0, "#EAB308"),
     ]
     for l_ref, l_lbl, lx, col in leds:
-        ax.add_patch(patches.Rectangle((lx - 1.2, y0 + 86.0 - 0.8), 2.4, 1.6, facecolor=col, edgecolor="#FFFFFF", linewidth=1.0, zorder=4))
-        ax.text(lx, y0 + 82.5, f"{l_ref}\n{l_lbl}", color=col, fontsize=6.2, fontweight='bold', ha='center', va='center', zorder=5)
+        ax.add_patch(patches.Rectangle((lx - 1.2, y0 + 72.0 - 0.8), 2.4, 1.6, facecolor=col, edgecolor="#FFFFFF", linewidth=1.0, zorder=4))
+        ax.text(lx, y0 + 68.0, f"{l_ref}\n{l_lbl}", color=col, fontsize=6.0, fontweight='bold', ha='center', va='center', zorder=5)
+
+    # Push Buttons SW1 (Force ON) and SW2 (Force OFF)
+    buttons = [
+        ("SW1", "FORCE ON", x0 + 44.0, "#166534"),
+        ("SW2", "FORCE OFF", x0 + 56.0, "#991B1B"),
+    ]
+    for b_ref, b_lbl, bx, b_col in buttons:
+        ax.add_patch(patches.Rectangle((bx - 3.2, y0 + 83.0 - 3.2), 6.4, 6.4, facecolor="#334155", edgecolor="#64748B", linewidth=1.2, zorder=4))
+        ax.add_patch(plt.Circle((bx, y0 + 83.0), 2.0, facecolor=b_col, edgecolor="#FFFFFF", linewidth=1.0, zorder=5))
+        ax.text(bx, y0 + 88.5, f"{b_ref}: {b_lbl}", color="#F8FAFC", fontsize=6.5, fontweight='bold', ha='center', va='center', zorder=6)
 
     ax.set_xlim(x0 - 5.0, x0 + w + 5.0)
     ax.set_ylim(y0 + h + 5.0, y0 - 5.0)  # Invert Y so top is 0

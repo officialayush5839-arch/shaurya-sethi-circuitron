@@ -2,7 +2,7 @@
   (version "D")
   (design
     (source "generate_wilo_pcb.py")
-    (date "11/04/2026 07:26 PM")
+    (date "11/04/2026 07:45 PM")
     (tool "SKiDL (3.0.0)")
     (sheet
       (number 1)
@@ -55,7 +55,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "NXHzeAzhzi")
+          (name "SKiDL Tag") "cSKmg1vwoD")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -65,7 +65,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "b390ba20-ed1e-5447-afa6-57765b155515"))
+      (tstamps "bb1a64bb-1866-5163-a7bd-5f46b468772b"))
     (comp
       (ref "C2")
       (value "22uF")
@@ -79,7 +79,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "xkdehUxnxl")
+          (name "SKiDL Tag") "rt6jcQeDmn")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -89,7 +89,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "9885a259-c213-5d2c-99ed-87be6ed23c15"))
+      (tstamps "bc895f2a-aafb-535e-a78e-a685edc9da77"))
     (comp
       (ref "C_ACS")
       (value "0.1uF")
@@ -103,7 +103,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "syoHSPDlQD")
+          (name "SKiDL Tag") "bNu1Ql1cs8")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -113,7 +113,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "25ec6434-2115-50f0-aa99-c6367d3cd39b"))
+      (tstamps "6c9680d3-4f66-505e-9bcc-a9adf2362626"))
     (comp
       (ref "C_ADS")
       (value "100nF")
@@ -127,7 +127,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "03WSWVF2jf")
+          (name "SKiDL Tag") "6GVrHR4OIK")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -137,7 +137,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "3e7be0a6-4a7d-5cde-8fed-27609d52b3ef"))
+      (tstamps "021e399c-c3a1-5f2c-925c-29851cc5f620"))
     (comp
       (ref "C_BIAS")
       (value "10uF")
@@ -151,7 +151,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "fdyHuByd6v")
+          (name "SKiDL Tag") "HnMkXD_Gsi")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -161,7 +161,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "d69588bd-41b2-53ab-940d-8135b4d6989c"))
+      (tstamps "4a30b482-dc62-535a-aefa-5bf8e2f48e10"))
     (comp
       (ref "C_F")
       (value "4.7nF")
@@ -175,7 +175,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "T4_K_bKGvV")
+          (name "SKiDL Tag") "tY1bIw1uG7")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -185,7 +185,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "5acaa23b-d776-5c93-b528-686b08d0b70c"))
+      (tstamps "3b69e2fb-4850-58c5-8d6d-580a483f1008"))
     (comp
       (ref "C_LORA1")
       (value "10uF")
@@ -199,7 +199,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "l3L7t3dw1q")
+          (name "SKiDL Tag") "kGu9xb_m8H")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -209,7 +209,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "8a894a55-41f2-5d2b-9970-d26a25939599"))
+      (tstamps "db11f98d-7b17-5fd0-af2f-a43fa2fd087c"))
     (comp
       (ref "C_LORA2")
       (value "0.1uF")
@@ -223,7 +223,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "Veb6suSGcz")
+          (name "SKiDL Tag") "yGtI2lIc0s")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -233,7 +233,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "ffd10052-a22e-5e8d-a962-36155356deb0"))
+      (tstamps "868dcf7f-2672-5cbe-8c6c-7edb17d040e0"))
     (comp
       (ref "C_SNUB1")
       (value "0.1uF_630V_X2")
@@ -247,7 +247,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "NvbdxzxcbG")
+          (name "SKiDL Tag") "0Q52GYDMvF")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -257,7 +257,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "bccd679e-29b1-5066-8ac4-b121a8969a37"))
+      (tstamps "f9186f97-3524-5575-b243-62bc67f8b6d5"))
     (comp
       (ref "D2")
       (value "1N4007")
@@ -271,7 +271,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "VILRmJ_0rJ")
+          (name "SKiDL Tag") "YCwncEd3Xa")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -281,7 +281,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "cc0ae859-4733-52a0-b557-ff6d521d8cc9"))
+      (tstamps "3e1ccdbd-dd0c-5851-b0a9-c8b0c4aa3e4e"))
     (comp
       (ref "D3")
       (value "1N4007")
@@ -295,7 +295,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "LKMFnqMTwd")
+          (name "SKiDL Tag") "1zIdZJwznT")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -305,7 +305,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "32cd00ad-e0da-5aa3-a098-5f9a53e920cf"))
+      (tstamps "f316bf76-4c50-518c-8dcf-0d0cc513ea01"))
     (comp
       (ref "J1")
       (value "RPi_Zero_2W_Header")
@@ -319,7 +319,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "snIrsWn5CP")
+          (name "SKiDL Tag") "Z0SZi1ecEq")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -329,7 +329,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "a8f88463-e5f2-5159-b437-80c1e1cfd1f4"))
+      (tstamps "0a869e7b-b05a-5fe9-bfae-2dfb9d2ff9a5"))
     (comp
       (ref "J_CT")
       (value "SCT013_CT_Jack")
@@ -343,7 +343,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "7rboNbkfQE")
+          (name "SKiDL Tag") "usE0WL_8aJ")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -353,7 +353,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "65111567-d28f-5c1e-8f2c-2c5871280e16"))
+      (tstamps "4cfbfd29-5c17-596c-9d9f-6a98725aeef8"))
     (comp
       (ref "J_SMA")
       (value "SMA_50_Ohm")
@@ -367,7 +367,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "uzyOecOyMv")
+          (name "SKiDL Tag") "9BnC6v_Frf")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -377,7 +377,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "e48b4515-b83a-5534-94ff-ef83876be41d"))
+      (tstamps "3fb6391b-0a61-5b16-82a5-b43b23d9355c"))
     (comp
       (ref "J_USBC")
       (value "USB_C_5V_IN")
@@ -391,7 +391,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "D90nOUhogt")
+          (name "SKiDL Tag") "WSGiNAWjd4")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -401,7 +401,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "08e111fd-fbe7-5385-a335-4a95f8d8be78"))
+      (tstamps "5e6a7ba6-5ada-527e-97bd-59944b5f92ca"))
     (comp
       (ref "K1")
       (value "Songle_5V_10A")
@@ -415,7 +415,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "hWs0i1nscT")
+          (name "SKiDL Tag") "FE6KCUA5S3")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -425,7 +425,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "8c868a27-3292-5ce5-b105-00e222d95f35"))
+      (tstamps "ec1fa222-fb0c-5992-a2b9-44660281ee38"))
     (comp
       (ref "K2")
       (value "Songle_5V_10A")
@@ -439,7 +439,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "FrVgcka0pJ")
+          (name "SKiDL Tag") "TC6Wpb1NEA")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -449,7 +449,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "ac7e17f1-83b2-5af2-80a3-4fc23c6e99aa"))
+      (tstamps "35c2f403-035c-5c83-afbe-b93c03182805"))
     (comp
       (ref "LED_3V3")
       (value "Blue_3V3_LoRa")
@@ -463,7 +463,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "VNaTYn7fRT")
+          (name "SKiDL Tag") "ORsa9Grpqo")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -473,7 +473,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "d3474653-179d-53af-a196-2f14cdc06dc1"))
+      (tstamps "a0f57ee2-899f-58ef-aa02-80bd52b5429c"))
     (comp
       (ref "LED_5V")
       (value "Green_5V_Power")
@@ -487,7 +487,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "GS3pO96VAh")
+          (name "SKiDL Tag") "XvjPTzAIMI")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -497,7 +497,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "2ffd3f4f-d04b-562c-9afa-fc67b94ece45"))
+      (tstamps "224cfa56-8397-5cf4-ba72-91224b6651d7"))
     (comp
       (ref "LED_PUMP")
       (value "Green_Pump_Active")
@@ -511,7 +511,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "Qs55VWU4_Q")
+          (name "SKiDL Tag") "HG30l6wZQT")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -521,7 +521,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "e3ccb065-5104-5269-840f-ca320459219d"))
+      (tstamps "89d53639-2039-55bd-ad37-94e55153cf49"))
     (comp
       (ref "MOV1")
       (value "14D471K_275VAC")
@@ -535,7 +535,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "uSDKLw_Uoq")
+          (name "SKiDL Tag") "q0jYAZyrOv")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -545,7 +545,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "9132d826-1c8f-572c-a1b4-57388f664a50"))
+      (tstamps "836bf1bb-5995-51d3-88e4-d5dcc613c786"))
     (comp
       (ref "Q1")
       (value "2N2222_NPN")
@@ -559,7 +559,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "7yF9WmU6dd")
+          (name "SKiDL Tag") "21tDdBaBfz")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -569,7 +569,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "6be0d3ca-578b-5efa-92be-bd8588d4151a"))
+      (tstamps "a404b68e-c36e-50bd-9ee2-d8374af3b6c7"))
     (comp
       (ref "Q2")
       (value "2N2222_NPN")
@@ -583,7 +583,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "jlKQO4UiqQ")
+          (name "SKiDL Tag") "Nv0F_MvNVN")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -593,7 +593,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "45f831f1-fc04-5c01-8a54-125f4583a396"))
+      (tstamps "ac868c5a-2427-5277-bcd8-11cd7a99bbf2"))
     (comp
       (ref "R_BIAS1")
       (value "10k")
@@ -607,7 +607,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "H3nLxRjUCX")
+          (name "SKiDL Tag") "JrjaRvCCpW")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -617,7 +617,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "3f698db5-a154-583d-8af8-134aca3ef9fe"))
+      (tstamps "9ad2f4d2-82e3-5899-8ae4-7439b23f591b"))
     (comp
       (ref "R_BIAS2")
       (value "10k")
@@ -631,7 +631,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "ry3ZwUvQTT")
+          (name "SKiDL Tag") "wVARZpQUUD")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -641,7 +641,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "d717f024-66d8-5cf0-a7c6-32e4e9af2a65"))
+      (tstamps "9a66193e-29f1-5db0-9987-fb8fea472edd"))
     (comp
       (ref "R_BURDEN")
       (value "33_Ohm")
@@ -655,7 +655,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "NbNy8L2SJm")
+          (name "SKiDL Tag") "vdaMIWuI6T")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -665,7 +665,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "6be1bee9-6c0f-5365-a55c-3c65e3297fef"))
+      (tstamps "ff876bb3-2076-5cfd-af9b-856fc8493c39"))
     (comp
       (ref "R_CC1")
       (value "5.1k")
@@ -679,7 +679,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "WJmZldC3I4")
+          (name "SKiDL Tag") "l1txAHnE70")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -689,7 +689,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "e97d9b3d-f7f7-52f7-8db6-c29c0231cf94"))
+      (tstamps "bbed9dbb-c454-50bf-9024-bcade23ec0e3"))
     (comp
       (ref "R_CC2")
       (value "5.1k")
@@ -703,7 +703,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "CQbpV5xCV9")
+          (name "SKiDL Tag") "VzNKvyBsak")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -713,7 +713,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "4b757b63-8f19-5490-9c7b-9a7f2f519521"))
+      (tstamps "cb9f314a-1859-5c20-aa9f-7c33736066fc"))
     (comp
       (ref "R_DRV1")
       (value "1k")
@@ -727,7 +727,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "d7HbXEDd3z")
+          (name "SKiDL Tag") "36jZyc86eX")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -737,7 +737,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "689fc988-f07b-5394-8f0b-2a328652cbc5"))
+      (tstamps "cdcae295-c19d-5fd5-a65b-b8c65a2972b3"))
     (comp
       (ref "R_DRV2")
       (value "1k")
@@ -751,7 +751,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "oV8ZrWIzEv")
+          (name "SKiDL Tag") "Ki3KY1TEYq")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -761,7 +761,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "656dd169-d030-5b69-bc26-84bd6ccfae21"))
+      (tstamps "4dfd647f-4c65-5c18-a8f6-bbb333ba1bfe"))
     (comp
       (ref "R_HV1")
       (value "41.2k_1W")
@@ -775,7 +775,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "zYVxYBGI0r")
+          (name "SKiDL Tag") "Sv6VPsTiWn")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -785,7 +785,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "6b32881f-ac95-5287-ab7a-c5ef3b4f690b"))
+      (tstamps "c9f9b3a9-cbf3-5f51-bdd8-62efb041f2aa"))
     (comp
       (ref "R_HV2")
       (value "41.2k_1W")
@@ -799,7 +799,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "nStEGFJhVN")
+          (name "SKiDL Tag") "NnZCxBr0cL")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -809,7 +809,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "57b88b7e-37d9-5f75-90cb-55ee708b7e62"))
+      (tstamps "eae135e2-7d90-5e98-be3a-f0e71b294351"))
     (comp
       (ref "R_LED1")
       (value "330")
@@ -823,7 +823,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "nTEWhQCmUP")
+          (name "SKiDL Tag") "nugcRMpoOp")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -833,7 +833,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "676d86a6-2bb7-5325-83c6-6d7fc8182a6d"))
+      (tstamps "9c077b7f-64bd-54db-a5f2-0a9392474e69"))
     (comp
       (ref "R_LED2")
       (value "470")
@@ -847,7 +847,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "HGOubANXQV")
+          (name "SKiDL Tag") "UIkmBI7SFp")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -857,7 +857,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "927c32cd-fb7e-5544-bd45-1885a784265a"))
+      (tstamps "a00ec634-5dbc-54e5-9f8b-d33b153acd10"))
     (comp
       (ref "R_LED3")
       (value "330")
@@ -871,7 +871,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "rq7OvIoM7f")
+          (name "SKiDL Tag") "ZwLUKi_dzC")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -881,7 +881,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "443dc4ed-2a49-570c-b6a8-e219558938dd"))
+      (tstamps "6c0f0832-4c6d-5229-ad50-8886fe52ce11"))
     (comp
       (ref "R_OPT1")
       (value "470")
@@ -895,7 +895,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "dVBVnKBlRx")
+          (name "SKiDL Tag") "y55Tdft0mA")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -905,7 +905,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "befe5360-b988-54dc-a753-04dda34ad23b"))
+      (tstamps "da247c56-c808-5fbf-b1a1-4d3b3ebeb062"))
     (comp
       (ref "R_OPT2")
       (value "470")
@@ -919,7 +919,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "oQaTAx3GwH")
+          (name "SKiDL Tag") "0mSb1oCZgE")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -929,7 +929,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "c023e113-e3ce-59ca-9642-77d5e58c6574"))
+      (tstamps "163c22c7-d75c-54a0-86cf-db7b505d9177"))
     (comp
       (ref "R_PD1")
       (value "10k")
@@ -943,7 +943,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "6YpShaHrRD")
+          (name "SKiDL Tag") "0GU6zdcDif")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -953,7 +953,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "5c2538e2-bf30-5c4c-ab64-27124bc20af1"))
+      (tstamps "183161b5-f3a6-55e0-b680-b76d7aff7144"))
     (comp
       (ref "R_PD2")
       (value "10k")
@@ -967,7 +967,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "V7damDl_qB")
+          (name "SKiDL Tag") "r1sj3xrpR4")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -977,7 +977,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "d9524311-dbc2-5385-b224-67f4bede0c45"))
+      (tstamps "20ac7eb0-b11b-55d4-af5a-31af02fa43e1"))
     (comp
       (ref "R_PU1")
       (value "4.7k")
@@ -991,7 +991,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "oAXjwaw1jM")
+          (name "SKiDL Tag") "R5X3Vw4Lje")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1001,7 +1001,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "d42f1f32-0bd5-5332-b83f-a579c7505df7"))
+      (tstamps "813934e3-17d3-529e-b101-de09d05f786d"))
     (comp
       (ref "R_PU2")
       (value "4.7k")
@@ -1015,7 +1015,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "mhUbwup83L")
+          (name "SKiDL Tag") "_v3No4GK9a")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1025,7 +1025,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "4b06f841-49d5-5bb1-bbfa-be0834bdcdc9"))
+      (tstamps "80d94bb7-4d2f-5861-bd65-24d413c9afbc"))
     (comp
       (ref "R_SNUB1")
       (value "100_1W")
@@ -1039,7 +1039,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "6X833Z8j5Z")
+          (name "SKiDL Tag") "vAEyvrC_Hk")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1049,7 +1049,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "c3b12150-6095-50e1-8598-2e8730b56323"))
+      (tstamps "6e0c8eda-0460-5d72-9737-66ea763fac85"))
     (comp
       (ref "SW1")
       (value "Force_ON")
@@ -1063,7 +1063,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "4RabTyTVxj")
+          (name "SKiDL Tag") "4UQC14rSkA")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1073,7 +1073,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "4c50c6b0-799c-5716-be42-010a4e17ba0c"))
+      (tstamps "0934b851-f165-5f72-9c11-878d89d093f0"))
     (comp
       (ref "SW2")
       (value "Force_OFF")
@@ -1087,7 +1087,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "WzitCGnpEB")
+          (name "SKiDL Tag") "fkVDbebsjN")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1097,7 +1097,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "af619d4b-8889-583d-8995-e34224c81376"))
+      (tstamps "399b1ed2-cdf9-5eef-aba3-fccd6d21f464"))
     (comp
       (ref "T1")
       (value "ZMPT101B_Transformer")
@@ -1111,7 +1111,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "jeghsM14zh")
+          (name "SKiDL Tag") "yDI3WZvbkZ")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1121,7 +1121,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "6b7f617b-2953-5bce-a207-a2a50218a9bc"))
+      (tstamps "9cc72446-480b-59af-9eb0-22126d7c7197"))
     (comp
       (ref "TB2")
       (value "AC_VOLT_SENSE_IN")
@@ -1135,7 +1135,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "UA4wjiOSKs")
+          (name "SKiDL Tag") "H8YjntdoAE")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1145,7 +1145,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "8823694b-ab0b-528b-ae23-b62a0e53fc76"))
+      (tstamps "817cd3a0-0fb7-5dbd-a589-4bd3d54f430a"))
     (comp
       (ref "TB3")
       (value "LOAD_ACTUATORS_OUT")
@@ -1159,7 +1159,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "SIiT_bGzqt")
+          (name "SKiDL Tag") "O3YGs7a6fW")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1169,7 +1169,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "8cd6a2bd-01dd-5cbf-9185-1bd8997f4ec2"))
+      (tstamps "26227f7b-4f42-54cd-8f12-77b22de76fb6"))
     (comp
       (ref "TB_EXP")
       (value "ADC_EXP_A2_A3")
@@ -1183,7 +1183,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "ZM0zyhsUZC")
+          (name "SKiDL Tag") "aGEsU9v3Zk")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1193,7 +1193,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "3a2773e0-1f05-5525-9e75-2e22baf44581"))
+      (tstamps "b32c5503-998e-5187-a26c-6bb3badef289"))
     (comp
       (ref "U1")
       (value "AMS1117-3.3")
@@ -1207,7 +1207,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "_tUF0gwwEa")
+          (name "SKiDL Tag") "eM39OqlVxs")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1217,7 +1217,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "1e8e89f2-592b-5e36-870d-302649cbcd9c"))
+      (tstamps "050f3dca-a78a-588c-bd94-9d03168f8b74"))
     (comp
       (ref "U2")
       (value "ADS1115")
@@ -1231,7 +1231,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "7tfHvRxmTR")
+          (name "SKiDL Tag") "X9Nx_dfEg1")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1241,7 +1241,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "e5acc128-fad4-5704-9ff5-71ae40a69eb8"))
+      (tstamps "1fb92db9-6430-5558-8ea5-f25f0ffd66e1"))
     (comp
       (ref "U3")
       (value "ACS712T-30A")
@@ -1255,7 +1255,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "75Uu7gGc37")
+          (name "SKiDL Tag") "HyPHI_arop")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1265,7 +1265,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "a353cc1f-ddae-50bc-a17a-28a01be59081"))
+      (tstamps "86cd282b-510c-57f7-80f7-832b8aeb5323"))
     (comp
       (ref "U4")
       (value "LM358_Conditioner")
@@ -1279,7 +1279,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "D2LdWME6b8")
+          (name "SKiDL Tag") "teElrTJP0Y")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1289,7 +1289,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "6fd3e1bb-cb05-5f31-84b7-9b497341e694"))
+      (tstamps "5458d2c4-81e7-5074-b178-3fb311c9d787"))
     (comp
       (ref "U5")
       (value "PC817_Pump")
@@ -1303,7 +1303,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "fgwM4Mh9AR")
+          (name "SKiDL Tag") "4yPMXUDfsb")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1313,7 +1313,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "8e2f92a2-9096-52d6-b875-c2743a19da3b"))
+      (tstamps "f34d9d10-42e7-5f1e-839c-b6426a26c6e6"))
     (comp
       (ref "U6")
       (value "PC817_Aux")
@@ -1327,7 +1327,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "XluyXXXcTf")
+          (name "SKiDL Tag") "46lsNjxee8")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1337,7 +1337,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "e634bd9c-91d0-5b3b-bd4a-7ead7ea94de3"))
+      (tstamps "60ba6d73-d800-5eb2-89da-fba40efe80e2"))
     (comp
       (ref "U_LORA")
       (value "SX1278_433MHz")
@@ -1351,7 +1351,7 @@
         (field
           (name "Datasheet"))
         (field
-          (name "SKiDL Tag") "ogAnkxPC6X")
+          (name "SKiDL Tag") "ZTPVBjR9aT")
         (field
           (name "SKiDL Line") "..\circuitron\circuits\wilo_receiver.py:67"))
       (libsource
@@ -1361,7 +1361,7 @@
         (names "/")
         (tstamps "/"))
       (component_classes)
-      (tstamps "022e7642-1f14-5b49-81bd-bcc2f673dd8b")))
+      (tstamps "f36d66d8-e62f-5ac7-adcf-e92db7f2a3d0")))
   (nets
     (net
       (code 1)
