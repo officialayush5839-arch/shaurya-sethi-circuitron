@@ -20,7 +20,15 @@ Production-ready, unified single-zone hardware design and complete KiCad project
 
 ---
 
-## Key Hardware Features & Architectural Highlights
+## Power Architecture: 100% USB-C Powered (No AC Power Supply on Board)
+
+> [!IMPORTANT]
+> **Zero AC-to-DC Converter on Board**:
+> This board contains **no onboard AC power supply** (no 230V AC-DC buck or linear supply).
+> - **All System Power (5V & 3.3V)** is delivered exclusively through the **USB Type-C connector (`J_USBC`)**.
+> - The USB-C 5V rail directly supplies the Raspberry Pi Zero 2W (`J1` Pins 2 & 4), the dual 10A power relay coils, the ACS712 current sensor, the ADS1115 ADC, and the AMS1117-3.3V LDO.
+> - The AMS1117-3.3V LDO outputs a dedicated low-noise 3.3V rail (`+3V3_LORA`) for the SX1278 Ra-02 LoRa transceiver.
+> - **`TB2` is strictly a measurement sensor input**: It connects solely through the 41.2 kΩ current-limiting resistors and the ZMPT101B micro potential transformer to sample AC line voltage into ADC channel `A1`. **It provides zero power to the board.**
 
 - **Spacious Single-Zone Form Factor (140 mm × 95 mm)**:
   - Form factor expanded from 120×85 mm to **140 mm × 95 mm** for uncrowded trace routing, generous component clearances, and improved thermal dissipation.

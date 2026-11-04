@@ -43,7 +43,7 @@ def render_board_png(output_png: Path) -> None:
 
     # 3. Silkscreen System Title (Single Unified Zone)
     ax.text(x0 + 70.0, y0 + 3.2, "WILO WATER PUMP AUTOMATION — RECEIVER STATION HAT (140mm x 95mm)", color="#F8FAFC", fontsize=10.5, fontweight='bold', ha='center', va='center', zorder=3)
-    ax.text(x0 + 26.0, y0 + 92.5, "MAIN SYSTEM POWER: 5V DC USB-C ONLY", color="#38BDF8", fontsize=8.5, fontweight='bold', ha='center', va='center', zorder=3)
+    ax.text(x0 + 42.0, y0 + 92.5, "MAIN SYSTEM POWER: 5V DC USB-C ONLY (NO AC POWER SUPPLY)", color="#38BDF8", fontsize=8.0, fontweight='bold', ha='center', va='center', zorder=3)
 
     # =========================================================================
     # TOP EDGE CONNECTORS: J1 (RPi 40-Pin Header), TB_EXP, TB2 (AC Voltage Sense)
@@ -78,7 +78,7 @@ def render_board_png(output_png: Path) -> None:
         ax.add_patch(plt.Circle((tb2_x + dx, tb2_y), 1.8, facecolor="#E2E8F0", edgecolor="#94A3B8", linewidth=1.0, zorder=5))
         ax.add_patch(patches.Rectangle((tb2_x + dx - 1.2, tb2_y - 0.25), 2.4, 0.5, facecolor="#334155", zorder=6))
         ax.text(tb2_x + dx, tb2_y + 6.0, lbl, color="#F87171" if lbl == "L" else "#60A5FA", fontsize=8.0, fontweight='bold', ha='center', va='center', zorder=7)
-    ax.text(tb2_x, tb2_y - 6.0, "TB2: 230V AC IN (SENSE ONLY)", color="#FCA5A5", fontsize=7.0, fontweight='bold', ha='center', va='center', zorder=7)
+    ax.text(tb2_x, tb2_y - 6.0, "TB2: VOLTAGE SENSE ONLY\n(NOT POWER INPUT)", color="#FCA5A5", fontsize=6.5, fontweight='bold', ha='center', va='center', zorder=7)
 
     # =========================================================================
     # LEFT EDGE CONNECTORS: J_SMA (Antenna), J_CT (CT Clamp), J_USBC (5V Power)

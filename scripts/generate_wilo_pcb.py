@@ -287,8 +287,8 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
     # 2. Silkscreen Board Branding & System Labels (Single unified zone, no milled isolation slots)
     lines.extend([
         f'  (gr_text "WILO WATER PUMP AUTOMATION — RECEIVER STATION HAT (140x95mm)" (at {x0 + 70.0} {y0 + 3.0}) (layer "F.SilkS") (effects (font (size 1.2 1.2) (thickness 0.2))))',
-        f'  (gr_text "MAIN SYSTEM POWER: 5V DC USB-C ONLY" (at {x0 + 26.0} {y0 + 92.0}) (layer "F.SilkS") (effects (font (size 1.0 1.0) (thickness 0.18))))',
-        f'  (gr_text "TB2: 230V AC SENSE ONLY" (at {x0 + 128.0} {y0 + 6.0}) (layer "F.SilkS") (effects (font (size 0.9 0.9) (thickness 0.15))))',
+        f'  (gr_text "MAIN SYSTEM POWER: 5V DC USB-C ONLY (NO AC POWER SUPPLY)" (at {x0 + 38.0} {y0 + 92.0}) (layer "F.SilkS") (effects (font (size 0.95 0.95) (thickness 0.16))))',
+        f'  (gr_text "TB2: VOLTAGE SENSE ONLY (NOT POWER)" (at {x0 + 124.0} {y0 + 6.0}) (layer "F.SilkS") (effects (font (size 0.85 0.85) (thickness 0.14))))',
         f'  (gr_text "TB3: ACTUATOR CONTACTS" (at {x0 + 130.0} {y0 + 89.0}) (layer "F.SilkS") (effects (font (size 0.9 0.9) (thickness 0.15))))',
     ])
 
@@ -442,7 +442,7 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
     component_labels = {
         "J1": "J1: RPi Zero 2W 40-Pin Header",
         "TB_EXP": "TB_EXP: A2/A3",
-        "TB2": "TB2: 230V AC IN",
+        "TB2": "TB2: SENSE ONLY (NOT POWER)",
         "J_SMA": "J_SMA: 50Ω Ant",
         "U_LORA": "U_LORA: Ra-02 433MHz",
         "C_LORA1": "10µF",
@@ -546,8 +546,8 @@ def generate_kicad_schematic_file(circuit, output_path: Path) -> None:
     blocks = [
         ("1. RASPBERRY PI ZERO 2W INTERFACE & GPIO BUS", 15.0, 18.0, 135.0, 105.0),
         ("2. SX1278 Ra-02 LoRa 433MHz TRANSCEIVER & RF", 145.0, 18.0, 265.0, 105.0),
-        ("3. AC MAINS VOLTAGE SAMPLING (ZMPT101B)", 275.0, 18.0, 405.0, 105.0),
-        ("4. 5V DC USB-C POWER SUPPLY & 3.3V LDO", 15.0, 115.0, 135.0, 195.0),
+        ("3. AC MAINS VOLTAGE SAMPLING ONLY (NOT POWER - ZMPT101B)", 275.0, 18.0, 405.0, 105.0),
+        ("4. MAIN 5V DC USB-C POWER SUPPLY & 3.3V LDO", 15.0, 115.0, 135.0, 195.0),
         ("5. ADS1115 16-BIT ADC & EXPANSION", 145.0, 115.0, 265.0, 195.0),
         ("6. MOTOR CURRENT SENSING (ACS712 & CT CLAMP)", 275.0, 115.0, 405.0, 195.0),
         ("7. DUAL POWER RELAYS, OPTOCOUPLERS & SNUBBER TRANSIENT PROTECTION", 15.0, 205.0, 405.0, 285.0),
