@@ -47,7 +47,7 @@ def render_kicad_pcb_to_svg(pcb_path: Path, svg_output_path: Path) -> None:
         by0 = min(p[1] for p in pts)
         bw = max(p[0] for p in pts) - bx0
         bh = max(p[1] for p in pts) - by0
-        out.append(f'  <rect x="{tx(bx0):.1f}" y="{tx(by0):.1f}" width="{bw*scale:.1f}" height="{bh*scale:.1f}" rx="{3*scale}" fill="#1B4D3E" stroke="#2D6A4F" stroke-width="2" filter="url(#shadow)"/>')
+        out.append(f'  <rect x="{tx(bx0):.1f}" y="{ty(by0):.1f}" width="{bw*scale:.1f}" height="{bh*scale:.1f}" rx="{3*scale}" fill="#1B4D3E" stroke="#2D6A4F" stroke-width="2" filter="url(#shadow)"/>')
 
     # Draw creepage slots
     slots = re.findall(r'\(gr_rect\s+\(start\s+([\d\.\-]+)\s+([\d\.\-]+)\)\s+\(end\s+([\d\.\-]+)\s+([\d\.\-]+)\).*?\(layer\s+"Edge\.Cuts"\)\)', pcb_text)
