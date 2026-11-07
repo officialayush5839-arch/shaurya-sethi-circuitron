@@ -11,6 +11,9 @@ Production-ready KiCad hardware project for the **Wilo Water Pump Automation Rec
 
 ## Visual Showcase
 
+### Full Engineering Schematic Diagram (Rev 3.0 — 7 Functional Blocks)
+![Wilo Receiver Station Schematic Diagram](wilo_receiver_schematic.png)
+
 ### High-Resolution 2D Board Layout (Rev 3.0 — 140 mm × 95 mm)
 ![Wilo Receiver Station Board Top Layout](wilo_receiver_board_top.png)
 
@@ -107,6 +110,7 @@ Wilo-Receiver-PCB/
 ├── wilo_receiver.pretty/          # Local footprint directory (18 custom .kicad_mod footprints)
 ├── gerbers/                       # Ready-to-order manufacturing Gerbers and drill files
 ├── firmware/                      # Companion Raspberry Pi Python firmware & systemd service
+├── wilo_receiver_schematic.png    # High-resolution engineering schematic diagram (A3)
 ├── wilo_receiver_board_top.png    # High-resolution 2D layout graphic
 ├── wilo_receiver_2d_board.svg     # Scalable Vector Graphic 2D board render
 ├── wilo_receiver_3d_iso.png       # 3D raytraced isometric render
