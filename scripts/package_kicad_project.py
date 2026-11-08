@@ -50,79 +50,16 @@ def create_portable_kicad_project(project_dir: Path, output_zip: Path) -> None:
     )
     (project_dir / "sym-lib-table").write_text(sym_lib_table, encoding="utf-8")
 
-    # 4. Write wilo_receiver.kicad_sym (Symbol Library)
-    # Define clean KiCad symbol sexprs for passive and IC symbols
+    # 4. Write wilo_receiver.kicad_sym (Symbol Library) with ALL 22 symbols
+    from scripts.build_complete_kicad_schematic import build_symbol_definitions
+    sym_defs = build_symbol_definitions()
     sym_header = (
         '(kicad_symbol_lib\n'
         '  (version 20231120)\n'
         '  (generator "circuitron")\n'
+        '  (generator_version "8.0")\n'
     )
-    sym_body = """
-  (symbol "R" (pin_names (offset 0)) (in_bom yes) (on_board yes)
-    (property "Reference" "R" (at 0 2.54 0) (effects (font (size 1.27 1.27))))
-    (property "Value" "R" (at 0 -2.54 0) (effects (font (size 1.27 1.27))))
-    (property "Footprint" "Resistor_SMD:R_0805_2012Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
-    (symbol "R_0_1"
-      (rectangle (start -1.016 2.032) (end 1.016 -2.032) (stroke (width 0.254)) (fill (type none)))
-      (pin passive line (at 0 3.81 270) (length 1.778) (name "~" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
-      (pin passive line (at 0 -3.81 90) (length 1.778) (name "~" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
-    )
-  )
-  (symbol "C" (pin_names (offset 0)) (in_bom yes) (on_board yes)
-    (property "Reference" "C" (at 0 2.54 0) (effects (font (size 1.27 1.27))))
-    (property "Value" "C" (at 0 -2.54 0) (effects (font (size 1.27 1.27))))
-    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
-    (symbol "C_0_1"
-      (polyline (pts (xy -2.032 0.508) (xy 2.032 0.508)) (stroke (width 0.508)))
-      (polyline (pts (xy -2.032 -0.508) (xy 2.032 -0.508)) (stroke (width 0.508)))
-      (pin passive line (at 0 2.54 270) (length 2.032) (name "~" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
-      (pin passive line (at 0 -2.54 90) (length 2.032) (name "~" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
-    )
-  )
-  (symbol "LED" (pin_names (offset 0)) (in_bom yes) (on_board yes)
-    (property "Reference" "D" (at 0 2.54 0) (effects (font (size 1.27 1.27))))
-    (property "Value" "LED" (at 0 -2.54 0) (effects (font (size 1.27 1.27))))
-    (property "Footprint" "LED_SMD:LED_0805_2012Metric" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
-    (symbol "LED_0_1"
-      (polyline (pts (xy -1.27 -1.27) (xy -1.27 1.27) (xy 1.27 0) (xy -1.27 -1.27)) (stroke (width 0.254)) (fill (type outline)))
-      (polyline (pts (xy 1.27 -1.27) (xy 1.27 1.27)) (stroke (width 0.254)))
-      (pin passive line (at -3.81 0 0) (length 2.54) (name "A" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
-      (pin passive line (at 3.81 0 180) (length 2.54) (name "K" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
-    )
-  )
-  (symbol "1N4007" (pin_names (offset 0)) (in_bom yes) (on_board yes)
-    (property "Reference" "D" (at 0 2.54 0) (effects (font (size 1.27 1.27))))
-    (property "Value" "1N4007" (at 0 -2.54 0) (effects (font (size 1.27 1.27))))
-    (property "Footprint" "Diode_SMD:D_SMA" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
-    (symbol "1N4007_0_1"
-      (polyline (pts (xy -1.27 -1.27) (xy -1.27 1.27) (xy 1.27 0) (xy -1.27 -1.27)) (stroke (width 0.254)) (fill (type outline)))
-      (polyline (pts (xy 1.27 -1.27) (xy 1.27 1.27)) (stroke (width 0.254)))
-      (pin passive line (at 3.81 0 180) (length 2.54) (name "K" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
-      (pin passive line (at -3.81 0 0) (length 2.54) (name "A" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
-    )
-  )
-  (symbol "Screw_Terminal_01x02" (pin_names (offset 1.016)) (in_bom yes) (on_board yes)
-    (property "Reference" "TB" (at 0 3.81 0) (effects (font (size 1.27 1.27))))
-    (property "Value" "Screw_Terminal_01x02" (at 0 -3.81 0) (effects (font (size 1.27 1.27))))
-    (property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
-    (symbol "Screw_Terminal_01x02_0_1"
-      (rectangle (start -2.54 2.54) (end 2.54 -2.54) (stroke (width 0.254)) (fill (type background)))
-      (pin passive line (at 5.08 1.27 180) (length 2.54) (name "1" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
-      (pin passive line (at 5.08 -1.27 180) (length 2.54) (name "2" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
-    )
-  )
-  (symbol "Screw_Terminal_01x03" (pin_names (offset 1.016)) (in_bom yes) (on_board yes)
-    (property "Reference" "TB" (at 0 5.08 0) (effects (font (size 1.27 1.27))))
-    (property "Value" "Screw_Terminal_01x03" (at 0 -5.08 0) (effects (font (size 1.27 1.27))))
-    (property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-3-5.08_1x03_P5.08mm_Horizontal" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
-    (symbol "Screw_Terminal_01x03_0_1"
-      (rectangle (start -2.54 3.81) (end 2.54 -3.81) (stroke (width 0.254)) (fill (type background)))
-      (pin passive line (at 5.08 2.54 180) (length 2.54) (name "1" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
-      (pin passive line (at 5.08 0 180) (length 2.54) (name "2" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
-      (pin passive line (at 5.08 -2.54 180) (length 2.54) (name "3" (effects (font (size 1.27 1.27)))) (number "3" (effects (font (size 1.27 1.27)))))
-    )
-  )
-"""
+    sym_body = "\n".join(sym_defs.values()) + "\n"
     sym_footer = ")\n"
     (project_dir / "wilo_receiver.kicad_sym").write_text(sym_header + sym_body + sym_footer, encoding="utf-8")
 
@@ -283,7 +220,51 @@ Wilo-Receiver-PCB/
     print(f"Successfully packaged KiCad project to {output_zip} ({zip_size_kb:.1f} KB)")
 
 
+def sync_to_destinations(output_zip: Path, project_dir: Path) -> None:
+    """Synchronize the portable ZIP and project files to Desktop and standalone repo."""
+    dest_zip_names = ["wilo_receiver_kicad_pcb.zip", "wilo_receiver_kicad_project.zip"]
+    desktop_dirs = [
+        Path(os.path.expanduser("~/OneDrive/Desktop")),
+        Path(os.path.expanduser("~/Desktop")),
+        Path("C:/Users/ARYAN - AYUSH/OneDrive/Desktop"),
+        Path("C:/Users/ARYAN - AYUSH/Desktop"),
+        Path("C:/Users/ARYAN - AYUSH/Documents/antigravity/Wilo-Receiver-PCB"),
+    ]
+    seen_dests = set()
+    for d in desktop_dirs:
+        try:
+            if d.exists() and d.resolve() not in seen_dests:
+                seen_dests.add(d.resolve())
+                for name in dest_zip_names:
+                    target = d / name
+                    shutil.copy2(output_zip, target)
+                    print(f"Synced {name} -> {target}")
+        except Exception as e:
+            print(f"Skipping {d}: {e}")
+
+    # Also make a duplicate in output/ with both names
+    for name in dest_zip_names:
+        out_target = output_zip.parent / name
+        if out_target.resolve() != output_zip.resolve():
+            shutil.copy2(output_zip, out_target)
+            print(f"Created duplicate archive: {out_target}")
+
+    # Sync project directory contents to standalone repo
+    repo_dir = Path("C:/Users/ARYAN - AYUSH/Documents/antigravity/Wilo-Receiver-PCB")
+    if repo_dir.exists():
+        for item in project_dir.iterdir():
+            dest_item = repo_dir / item.name
+            if item.is_dir():
+                if dest_item.exists():
+                    shutil.rmtree(dest_item)
+                shutil.copytree(item, dest_item)
+            else:
+                shutil.copy2(item, dest_item)
+        print(f"Synced project tree to {repo_dir}")
+
+
 if __name__ == "__main__":
     src_dir = Path("output/wilo_receiver")
     zip_dest = Path("output/wilo_receiver_kicad_project.zip")
     create_portable_kicad_project(src_dir, zip_dest)
+    sync_to_destinations(zip_dest, src_dir)
