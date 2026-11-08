@@ -494,6 +494,33 @@ def generate_kicad_pcb_file(circuit, output_path: Path) -> None:
         "LED_PUMP": "PUMP ACTIVE",
     }
 
+    # Pinout identification markings directly at the connector terminals
+    connector_pin_markings = [
+        # TB3 Actuator Terminals
+        (x0 + 137.0, y0 + 70.0, "1:PUMP"),
+        (x0 + 137.0, y0 + 75.0, "2:VALVE"),
+        (x0 + 137.0, y0 + 80.0, "3:NEUT"),
+        # TB2 AC Mains Voltage Sense Terminals
+        (x0 + 125.0, y0 + 18.0, "1:L"),
+        (x0 + 131.0, y0 + 18.0, "2:N"),
+        # TB_EXP ADC Expansion Terminals
+        (x0 + 95.0, y0 + 16.0, "1:A2"),
+        (x0 + 101.0, y0 + 16.0, "2:A3"),
+        # J_USBC Power Input
+        (x0 + 7.0, y0 + 74.0, "USB-C 5V IN"),
+        # J_CT CT Clamp Audio Jack
+        (x0 + 8.0, y0 + 44.0, "SCT-013 CT"),
+        # J_SMA 433MHz Antenna
+        (x0 + 6.0, y0 + 15.0, "433MHz ANT"),
+        # J1 RPi Header Key Pins
+        (x0 + 30.0, y0 + 5.0, "[1] 3V3"),
+        (x0 + 30.0, y0 + 8.0, "[2] 5V"),
+        (x0 + 80.0, y0 + 5.0, "[39] GND"),
+        (x0 + 80.0, y0 + 8.0, "[40] GPIO21"),
+    ]
+    for mx, my, mtext in connector_pin_markings:
+        lines.append(f'  (gr_text "{mtext}" (at {mx} {my}) (layer "F.SilkS") (effects (font (size 0.75 0.75) (thickness 0.12))))')
+
     for ref, lbl in component_labels.items():
         if ref in label_positions:
             lx, ly = label_positions[ref]
